@@ -41,7 +41,7 @@ export default function EmbedBlock({ data, editing }) {
 
   if (!url) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-16 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-16 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Paste an embed URL
       </div>
     );
@@ -77,14 +77,14 @@ export default function EmbedBlock({ data, editing }) {
 
   return (
     <div className="flex flex-col mb-8 mt-2">
-      <div className={`w-full rounded-[20px] overflow-hidden relative bg-[#F1EEE6] ${aspectClass}`}>
+      <div className={`w-full rounded-[20px] overflow-hidden relative bg-surface-sunken ${aspectClass}`}>
         {!isLoaded ? (
           <div 
-            className="absolute inset-0 bg-[#DCD6C7] flex items-center justify-center cursor-pointer group bg-cover bg-center"
+            className="absolute inset-0 bg-border flex items-center justify-center cursor-pointer group bg-cover bg-center"
             style={thumb ? { backgroundImage: `url(${thumb})` } : {}}
             onClick={handlePlay}
           >
-            <div className="w-[56px] h-[56px] rounded-full bg-white/90 shadow-md flex items-center justify-center group-hover:scale-105 transition-transform">
+            <div className="w-[56px] h-[56px] rounded-full bg-surface shadow-md flex items-center justify-center group-hover:scale-105 transition-transform">
               <Play className="w-6 h-6 text-ink ml-1" fill="currentColor" />
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function EmbedBlock({ data, editing }) {
       </div>
       
       {caption && (
-        <figcaption className="font-sans text-[13px] leading-[1.5] text-[#8A8375] mt-[10px] text-center">
+        <figcaption className="font-sans text-[13px] leading-[1.5] text-muted mt-[10px] text-center">
           {caption}
         </figcaption>
       )}

@@ -41,7 +41,7 @@ function PaletteButton({ type, onClickAdd }) {
       {...listeners}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
-      className="flex flex-col items-center justify-center p-3 rounded-[14px] bg-transparent border border-transparent hover:bg-white hover:border-border hover:shadow-sm hover:text-accent transition-all group cursor-grab active:cursor-grabbing h-16 active:scale-95"
+      className="flex flex-col items-center justify-center p-3 rounded-[14px] bg-transparent border border-transparent hover:bg-surface hover:border-border hover:shadow-sm hover:text-accent transition-all group cursor-grab active:cursor-grabbing h-16 active:scale-[0.98]"
     >
       <div className="text-muted group-hover:text-accent mb-1.5 pointer-events-none">
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -110,9 +110,12 @@ export default function BlockPalette() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden relative">
+      {/* Fixed Header */}
+      <div className="px-5 pt-5 pb-3 shrink-0 border-b border-border">
+        <h3 className="text-[10px] font-bold text-muted uppercase tracking-wider">Blocks · Drag In</h3>
+      </div>
       {/* Blocks Section (Scrollable) */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 flex flex-col pb-24">
-        <h3 className="text-[10px] font-bold text-muted uppercase tracking-wider mb-4">Blocks · Drag In</h3>
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 pb-24 flex flex-col">
         <div className="grid grid-cols-2 gap-3">
           {PALETTE_BLOCK_TYPES.map(type => (
             <PaletteButton key={type} type={type} onClickAdd={handleClickAdd} />
@@ -122,13 +125,13 @@ export default function BlockPalette() {
 
       {/* Expandable Outline Drawer */}
       <div 
-        className={`absolute bottom-0 left-0 right-0 bg-[#F2EFE8] border-t border-border flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-10 ${
+        className={`absolute bottom-0 left-0 right-0 bg-paper border-t border-border flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-10 ${
           isOutlineExpanded ? 'h-1/2' : 'h-[52px]'
         }`}
       >
         <button 
           onClick={() => setIsOutlineExpanded(!isOutlineExpanded)}
-          className="h-[52px] w-full px-5 flex items-center justify-between text-muted hover:text-ink hover:bg-white/40 transition-colors shrink-0"
+          className="h-[52px] w-full px-5 flex items-center justify-between text-muted hover:text-ink hover:bg-surface-sunken transition-colors shrink-0"
         >
           <span className="text-[10px] font-bold uppercase tracking-wider">Outline · {blocks.length}</span>
           <svg 
@@ -149,8 +152,8 @@ export default function BlockPalette() {
                   onClick={() => handleOutlineClick(block.id)}
                   className={`px-3 py-2 text-[13px] truncate rounded-lg cursor-pointer transition-all active:scale-[0.98] ${
                     isActive 
-                      ? 'bg-white shadow-sm ring-1 ring-border text-ink font-semibold' 
-                      : 'text-muted hover:bg-white/50 hover:text-ink'
+                      ? 'bg-surface shadow-sm ring-1 ring-border text-ink font-semibold' 
+                      : 'text-muted hover:bg-surface-sunken hover:text-ink'
                   }`}
                 >
                   {getOutlineLabel(block)}

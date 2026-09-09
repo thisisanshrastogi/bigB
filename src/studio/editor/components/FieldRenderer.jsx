@@ -1,7 +1,65 @@
 "use client";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import RichTextEditor from './RichTextEditor';
 import MediaLibraryModal from './MediaLibraryModal';
+
+function CustomSelect({ value, onChange, options, placeholder = 'Select an option...' }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const selectedOpt = options?.find(opt => String(opt.value !== undefined ? opt.value : opt) === String(value));
+  const displayLabel = selectedOpt ? (selectedOpt.label !== undefined ? selectedOpt.label : selectedOpt) : placeholder;
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white flex items-center justify-between shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-border-strong transition-colors outline-none focus:border-accent"
+      >
+        <span className="truncate">{displayLabel}</span>
+        <svg className={`w-4 h-4 text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-lg shadow-lg py-1 max-h-60 overflow-y-auto">
+          {options?.map((opt, i) => {
+            const optValue = opt.value !== undefined ? opt.value : opt;
+            const optLabel = opt.label !== undefined ? opt.label : opt;
+            const isSelected = String(value) === String(optValue);
+            
+            return (
+              <button
+                key={optValue === '' ? `empty-${i}` : String(optValue)}
+                type="button"
+                onClick={() => {
+                  onChange(optValue);
+                  setIsOpen(false);
+                }}
+                className={`w-full text-left px-3 py-2 text-[14px] hover:bg-surface-sunken transition-colors flex items-center justify-between ${isSelected ? 'text-accent font-semibold bg-highlight/10 hover:bg-highlight/20' : 'text-ink'}`}
+              >
+                <span className="truncate">{optLabel}</span>
+                {isSelected && (
+                  <svg className="w-4 h-4 text-accent shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ImageFieldRenderer({ field, value, onChange }) {
   const { key, label, help } = field;
@@ -33,7 +91,7 @@ function ImageFieldRenderer({ field, value, onChange }) {
           placeholder="Or paste an image URL..."
           value={imageUrl} 
           onChange={(e) => onChange(e.target.value)}
-          className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+          className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
         />
       </div>
       {help && <p className="text-xs text-muted mt-2">{help}</p>}
@@ -62,7 +120,7 @@ export default function FieldRenderer({ field, value, onChange }) {
             type="text" 
             value={val} 
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
@@ -75,7 +133,7 @@ export default function FieldRenderer({ field, value, onChange }) {
           <textarea 
             value={val} 
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors resize-y min-h-[100px] shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors resize-y min-h-[100px] shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
@@ -85,18 +143,11 @@ export default function FieldRenderer({ field, value, onChange }) {
       return (
         <div className="mb-6">
           <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>
-          <select 
+          <CustomSelect 
             value={val} 
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-          >
-            <option value="" disabled>Select an option...</option>
-            {options?.map((opt, i) => {
-              const optValue = opt.value !== undefined ? opt.value : opt;
-              const optLabel = opt.label !== undefined ? opt.label : opt;
-              return <option key={optValue === '' ? `empty-${i}` : optValue} value={optValue}>{optLabel}</option>
-            })}
-          </select>
+            onChange={onChange} 
+            options={options} 
+          />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
       );
@@ -115,7 +166,7 @@ export default function FieldRenderer({ field, value, onChange }) {
                 <button
                   key={String(optValue)}
                   onClick={() => onChange(optValue)}
-                  className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-[13px] font-semibold transition-all capitalize truncate ${isSelected ? 'bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.05)]' : 'text-muted hover:text-ink'}`}
+                  className={`flex-1 min-w-0 px-2 py-1.5 rounded-full text-[14px] font-semibold transition-all capitalize truncate ${isSelected ? 'bg-white text-ink shadow-[0_1px_3px_rgba(0,0,0,0.05)]' : 'text-muted hover:text-ink'}`}
                 >
                   {optLabel}
                 </button>
@@ -163,8 +214,12 @@ export default function FieldRenderer({ field, value, onChange }) {
       return (
         <div className="mb-6">
           <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>
-          <div className="border border-border rounded-lg overflow-hidden bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-            <RichTextEditor value={val} onChange={onChange} />
+          <div className="border border-border rounded-lg bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)] px-3 py-2">
+            <RichTextEditor 
+              value={val} 
+              onChange={onChange} 
+              sizeClass="text-[14px] leading-[1.6] text-ink"
+            />
           </div>
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
@@ -177,15 +232,15 @@ export default function FieldRenderer({ field, value, onChange }) {
       return (
         <div className="mb-6">
           <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>
-          <select 
+          <CustomSelect 
             value={val} 
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-          >
-            <option value="" disabled>Choose a product card...</option>
-            <option value="card-1">Chase Sapphire Reserve</option>
-            <option value="card-2">Amex Platinum</option>
-          </select>
+            onChange={onChange} 
+            placeholder="Choose a product card..."
+            options={[
+              { label: 'Chase Sapphire Reserve', value: 'card-1' },
+              { label: 'Amex Platinum', value: 'card-2' }
+            ]} 
+          />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
       );
@@ -246,7 +301,7 @@ export default function FieldRenderer({ field, value, onChange }) {
             type="number" 
             value={val === '' ? '' : Number(val)} 
             onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
-            className="w-full px-3 py-2 text-[13px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>

@@ -246,7 +246,7 @@ export default function PostDetailsView() {
   };
 
   return (
-    <div className="flex-1 w-full bg-[#F5F2EA] overflow-y-auto">
+    <div className="flex-1 w-full bg-paper overflow-y-auto">
       <div className="max-w-[1400px] mx-auto w-full p-6 lg:p-10">
         <div className="flex flex-col lg:flex-row gap-6 items-start">
 

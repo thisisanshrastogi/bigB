@@ -76,7 +76,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
       className={`relative group ${isDragging ? 'z-50' : ''}`}
     >
       {/* Inner wrapper for selection/hover transitions — isolated from dnd transform */}
-      <div className={`p-2 rounded-xl transition-all duration-200 ${widthClass} ${isSelected ? 'bg-white premium-shadow ring-1 ring-[#2C4035]/20' : 'ring-1 ring-transparent hover:ring-border hover:bg-white/50'} ${isDragging ? 'shadow-2xl' : ''}`}>
+      <div className={`p-2 rounded-xl transition-all duration-200 ${widthClass} ${isSelected ? 'bg-surface premium-shadow ring-1 ring-accent/20' : 'ring-1 ring-transparent hover:ring-border hover:bg-surface/50'} ${isDragging ? 'shadow-2xl' : ''}`}>
 
       {/* Selection Chrome */}
       {isSelected && (
@@ -88,7 +88,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
               <button 
                 {...attributes} 
                 {...listeners}
-                className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center cursor-grab active:cursor-grabbing text-[#D6CFBF] active:scale-95 rounded-l-full"
+                className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center cursor-grab active:cursor-grabbing text-[#D6CFBF] active:scale-[0.98] rounded-l-full"
                 title="Drag to move"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM20 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" /></svg>
@@ -144,7 +144,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
             {!block.locked && (
               <button 
                 onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
-                className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-95"
+                className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-[0.98]"
                 title="Duplicate block"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
@@ -155,7 +155,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
             {!block.locked && (
               <button 
                 onClick={(e) => { e.stopPropagation(); onRemove(); }}
-                className="px-3 h-full hover:bg-red-500/20 hover:text-red-400 transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-95"
+                className="px-3 h-full hover:bg-red-500/20 hover:text-red-400 transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-[0.98]"
                 title="Remove block"
               >
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -165,7 +165,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
             {/* Overflow */}
             <button 
               onClick={(e) => { e.stopPropagation(); }}
-              className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-95 rounded-r-full"
+              className="px-3 h-full hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-[0.98] rounded-r-full"
               title="More options"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>

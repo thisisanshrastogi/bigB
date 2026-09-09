@@ -10,7 +10,7 @@ export default function CtaBlock({ data, editing }) {
 
   if (!heading && !body) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add CTA content...
       </div>
     );
@@ -22,20 +22,25 @@ export default function CtaBlock({ data, editing }) {
   let buttonClass = 'inline-flex items-center justify-center font-sans font-bold text-[15px] px-6 py-3 rounded-full transition-colors whitespace-nowrap ';
 
   if (theme === 'ink') {
-    containerClass = 'bg-[#171613] rounded-[24px] px-[32px] py-[36px]';
-    headingClass += 'text-[#F5F2EA]';
-    bodyClass += 'text-[#B9B2A2]';
-    buttonClass += 'bg-[#F5F2EA] text-[#171613] hover:bg-white';
+    containerClass = 'bg-ink rounded-[24px] px-[32px] py-[36px]';
+    headingClass += 'text-paper';
+    bodyClass += 'text-paper/80';
+    buttonClass += 'bg-paper text-ink hover:bg-white';
   } else if (theme === 'mint') {
-    containerClass = 'bg-[#C2E0D1] rounded-[24px] px-[32px] py-[36px]';
-    headingClass += 'text-[#2C4035]';
-    bodyClass += 'text-[#4F5C52]';
-    buttonClass += 'bg-[#2C4035] text-white hover:bg-[#1E2D25]';
+    containerClass = 'bg-highlight rounded-[24px] px-[32px] py-[36px]';
+    headingClass += 'text-accent';
+    bodyClass += 'text-accent/80';
+    buttonClass += 'bg-accent text-white hover:bg-accent/90';
+  } else if (theme === 'forest') {
+    containerClass = 'bg-accent rounded-[24px] px-[32px] py-[36px]';
+    headingClass += 'text-surface';
+    bodyClass += 'text-surface/80';
+    buttonClass += 'bg-surface text-accent hover:bg-surface-sunken';
   } else if (theme === 'outline') {
-    containerClass = 'bg-transparent border border-[#D6CFBF] rounded-[24px] px-[32px] py-[36px]';
+    containerClass = 'bg-transparent border border-border-strong rounded-[24px] px-[32px] py-[36px]';
     headingClass += 'text-ink';
     bodyClass += 'text-muted';
-    buttonClass += 'bg-ink text-white hover:bg-[#2E2B25]';
+    buttonClass += 'bg-ink text-white hover:bg-ink/90';
   }
 
   const layoutClass = layout === 'row' 

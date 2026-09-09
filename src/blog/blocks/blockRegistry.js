@@ -11,14 +11,11 @@ import StepsBlock from './StepsBlock';
 import CalloutBlock from './CalloutBlock';
 import CtaBlock from './CtaBlock';
 import TableBlock from './TableBlock';
-import CardBlock from './CardBlock';
 import FaqBlock from './FaqBlock';
 import SourcesBlock from './SourcesBlock';
-import ColumnsBlock from './ColumnsBlock';
 import CodeBlock from './CodeBlock';
 import NewsletterBlock from './NewsletterBlock';
 import RelatedPostsBlock from './RelatedPostsBlock';
-import TocBlock from './TocBlock';
 import GlossaryBlock from './GlossaryBlock';
 
 export const blockRegistry = {
@@ -26,14 +23,15 @@ export const blockRegistry = {
     component: HeadingBlock, 
     label: 'Heading', 
     icon: 'M4 6h16M4 12h16M4 18h16',
-    defaultData: { level: 'h2', text: '', anchor: '', align: 'left', weight: 'default', inTOC: true },
+    defaultData: { level: 'h2', text: '', anchor: '', align: 'left', weight: 'default', fontFamily: 'auto', inTOC: true },
     editor: [
       { key: 'level', type: 'select', options: [
         { label: 'H2 – Section', value: 'h2' },
         { label: 'H3 – Sub-section', value: 'h3' },
         { label: 'H4 – Minor', value: 'h4' }
       ], label: 'Level' },
-      { key: 'align', type: 'toggleGroup', options: [{label: 'Left', value: 'left'}, {label: 'Center', value: 'center'}], label: 'Alignment' },
+      { key: 'fontFamily', type: 'toggleGroup', options: [{label: 'Auto', value: 'auto'}, {label: 'Serif', value: 'serif'}, {label: 'Sans', value: 'sans'}], label: 'Font Family' },
+      { key: 'align', type: 'toggleGroup', options: [{label: 'Left', value: 'left'}, {label: 'Center', value: 'center'}, {label: 'Right', value: 'right'}], label: 'Alignment' },
       { key: 'weight', type: 'toggleGroup', options: [{label: 'Default', value: 'default'}, {label: 'Normal', value: 'normal'}, {label: 'Bold', value: 'bold'}], label: 'Weight' },
       { key: 'text', type: 'text', label: 'Text' },
       { key: 'anchor', type: 'text', label: 'Anchor ID', help: 'For table of contents linking.' },
@@ -90,9 +88,15 @@ export const blockRegistry = {
     component: QuoteBlock, 
     label: 'Quote', 
     icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z',
-    defaultData: { text: '', attribution: '', variant: 'pull' },
+    defaultData: { text: '', attribution: '', variant: 'pull', theme: 'mint' },
     editor: [
       { key: 'variant', type: 'toggleGroup', options: [{label: 'Rule', value: 'rule'}, {label: 'Pull', value: 'pull'}, {label: 'Card', value: 'card'}], label: 'Variant' },
+      { key: 'theme', type: 'select', options: [
+        {label: 'Mint', value: 'mint'},
+        {label: 'Forest', value: 'forest'},
+        {label: 'Dark', value: 'dark'},
+        {label: 'Paper', value: 'paper'}
+      ], label: 'Card Theme' },
       { key: 'text', type: 'textarea', label: 'Quote Text' },
       { key: 'attribution', type: 'text', label: 'Attribution' },
       { key: 'avatar', type: 'image', label: 'Avatar URL (Card variant only)' }
@@ -104,9 +108,10 @@ export const blockRegistry = {
     component: DividerBlock, 
     label: 'Divider', 
     icon: 'M20 12H4',
-    defaultData: { variant: 'rule' },
+    defaultData: { variant: 'rule', height: 'medium' },
     editor: [
-      { key: 'variant', type: 'toggleGroup', options: [{label: 'Rule', value: 'rule'}, {label: 'Dots', value: 'dots'}, {label: 'Space', value: 'space'}], label: 'Variant' }
+      { key: 'variant', type: 'toggleGroup', options: [{label: 'Rule', value: 'rule'}, {label: 'Dots', value: 'dots'}, {label: 'Space', value: 'space'}], label: 'Variant' },
+      { key: 'height', type: 'toggleGroup', options: [{label: 'Small', value: 'small'}, {label: 'Medium', value: 'medium'}, {label: 'Large', value: 'large'}], label: 'Space Height' }
     ],
     validate: () => [],
     toText: () => ''
@@ -249,11 +254,12 @@ export const blockRegistry = {
     icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     defaultData: { variant: 'info', title: '', body: '', presentation: 'boxed' },
     editor: [
-      { key: 'variant', type: 'toggleGroup', options: [
+      { key: 'variant', type: 'select', options: [
         {label: 'Info', value: 'info'},
         {label: 'Warn', value: 'warn'},
         {label: 'Success', value: 'success'},
-        {label: 'Stat', value: 'stat'}
+        {label: 'Stat', value: 'stat'},
+        {label: 'Stat (Forest)', value: 'stat-forest'}
       ], label: 'Variant' },
       { key: 'presentation', type: 'toggleGroup', options: [{label: 'Boxed', value: 'boxed'}, {label: 'Rule', value: 'rule'}], label: 'Presentation' },
       { key: 'figure', type: 'text', label: 'Stat Figure (Stat only)' },
@@ -272,17 +278,10 @@ export const blockRegistry = {
     component: CtaBlock, 
     label: 'Call to Action', 
     icon: 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122',
-    defaultData: { theme: 'ink', layout: 'row', heading: '', body: '', buttonLabel: 'Click Here', href: '#' },
+    defaultData: { heading: '', body: '', buttonLabel: 'Click Here', href: '', theme: 'ink', layout: 'row' },
     editor: [
-      { key: 'theme', type: 'toggleGroup', options: [
-        {label: 'Ink', value: 'ink'},
-        {label: 'Mint', value: 'mint'},
-        {label: 'Outline', value: 'outline'}
-      ], label: 'Theme' },
-      { key: 'layout', type: 'toggleGroup', options: [
-        {label: 'Row', value: 'row'},
-        {label: 'Stacked', value: 'stacked'}
-      ], label: 'Layout' },
+      { key: 'theme', type: 'select', options: [{label: 'Ink', value: 'ink'}, {label: 'Mint', value: 'mint'}, {label: 'Forest', value: 'forest'}, {label: 'Outline', value: 'outline'}], label: 'Theme' },
+      { key: 'layout', type: 'toggleGroup', options: [{label: 'Row', value: 'row'}, {label: 'Stacked', value: 'stacked'}], label: 'Layout' },
       { key: 'heading', type: 'text', label: 'Heading' },
       { key: 'body', type: 'textarea', label: 'Body Text' },
       { key: 'buttonLabel', type: 'text', label: 'Button Label' },
@@ -317,24 +316,6 @@ export const blockRegistry = {
       if (data.rows?.some(row => (row.cells?.length || 0) !== colCount)) {
         issues.push({ level: 'warn', message: 'Table rows have mismatched column counts.' });
       }
-      return issues;
-    },
-    toText: () => ''
-  },
-  card: { 
-    component: CardBlock, 
-    label: 'Card / Product', 
-    icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
-    defaultData: { cardId: '', variant: 'inline', showCTA: true },
-    editor: [
-      { key: 'cardId', type: 'text', label: 'Card ID Reference' },
-      { key: 'variant', type: 'toggleGroup', options: [{label: 'Inline', value: 'inline'}, {label: 'Sidebar', value: 'sidebar'}, {label: 'Compare Row', value: 'compare-row'}], label: 'Variant' },
-      { key: 'showCTA', type: 'boolean', label: 'Show CTA Button' },
-      { key: 'overrideVerdict', type: 'textarea', label: 'Override Verdict Copy' }
-    ],
-    validate: (data = {}) => {
-      const issues = [];
-      if (!data.cardId) issues.push({ level: 'error', message: 'Card block is missing a valid card reference.' });
       return issues;
     },
     toText: () => ''
@@ -376,23 +357,6 @@ export const blockRegistry = {
     ],
     validate: () => [],
     toText: (data = {}) => data.items?.map(i => i.text).join(' ') || ''
-  },
-  columns: {
-    component: ColumnsBlock,
-    label: 'Columns',
-    icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2',
-    defaultData: { count: 2, ratio: '1:1', stackOn: 'mobile', children: [[], []] },
-    editor: [
-      { key: 'count', type: 'toggleGroup', options: [{label: '2 Columns', value: 2}, {label: '3 Columns', value: 3}], label: 'Column Count' },
-      { key: 'ratio', type: 'select', options: [
-        {label: '1:1', value: '1:1'},
-        {label: '2:1', value: '2:1'},
-        {label: '1:2', value: '1:2'}
-      ], label: 'Ratio (for 2 cols)' },
-      { key: 'stackOn', type: 'toggleGroup', options: [{label: 'Mobile', value: 'mobile'}, {label: 'Tablet', value: 'tablet'}], label: 'Stack Breakpoint' }
-    ],
-    validate: () => [],
-    toText: () => ''
   },
   code: {
     component: CodeBlock,
@@ -436,26 +400,17 @@ export const blockRegistry = {
     component: RelatedPostsBlock,
     label: 'Related Posts',
     icon: 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z',
-    defaultData: { mode: 'auto-by-tag', count: 3, heading: 'Related reading' },
+    defaultData: { mode: 'auto-by-tag', count: 3, heading: 'Related reading', posts: [] },
     editor: [
       { key: 'mode', type: 'toggleGroup', options: [{label: 'Auto (Tags)', value: 'auto-by-tag'}, {label: 'Manual', value: 'manual'}], label: 'Mode' },
       { key: 'heading', type: 'text', label: 'Section Heading' },
-      { key: 'count', type: 'number', label: 'Count' },
-      { key: 'posts', type: 'text', label: 'Manual Post IDs (Comma separated)' } // Simplified for now
-    ],
-    validate: () => [],
-    toText: () => ''
-  },
-  toc: {
-    component: TocBlock,
-    label: 'Anchor / TOC',
-    icon: 'M4 6h16M4 12h16M4 18h7',
-    defaultData: { depth: 'h2', position: 'rail', sticky: true, railSide: 'left' },
-    editor: [
-      { key: 'depth', type: 'toggleGroup', options: [{label: 'H2 Only', value: 'h2'}, {label: 'H2 + H3', value: 'h2+h3'}], label: 'Depth' },
-      { key: 'position', type: 'toggleGroup', options: [{label: 'Rail', value: 'rail'}, {label: 'Inline', value: 'inline'}], label: 'Position' },
-      { key: 'sticky', type: 'boolean', label: 'Sticky in Rail' },
-      { key: 'railSide', type: 'toggleGroup', options: [{label: 'Left', value: 'left'}, {label: 'Right', value: 'right'}], label: 'Rail Side' }
+      { key: 'count', type: 'number', label: 'Count (Auto mode)' },
+      { key: 'posts', type: 'repeatable', itemSchema: [
+        { key: 'title', type: 'text', label: 'Post Title' },
+        { key: 'url', type: 'text', label: 'Post URL' },
+        { key: 'date', type: 'text', label: 'Date' },
+        { key: 'readTime', type: 'text', label: 'Read Time' }
+      ], label: 'Manual Posts' }
     ],
     validate: () => [],
     toText: () => ''

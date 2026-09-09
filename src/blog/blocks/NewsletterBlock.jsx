@@ -15,7 +15,7 @@ export default function NewsletterBlock({ data, editing }) {
 
   if (!heading && !body) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add newsletter content...
       </div>
     );
@@ -35,36 +35,36 @@ export default function NewsletterBlock({ data, editing }) {
 
   const themeMap = {
     mint: {
-      container: "bg-[#C2E0D1]",
-      heading: "text-[#2C4035]",
-      body: "text-[#4F5C52]",
-      input: "bg-white border-[#E2DFD5] text-ink placeholder:text-muted focus:ring-[#2C4035]",
-      button: "bg-[#2C4035] text-white hover:bg-[#1E2D25]",
-      icon: "bg-[#2C4035] text-white"
+      container: "bg-highlight",
+      heading: "text-accent",
+      body: "text-accent/80",
+      input: "bg-surface border-border text-ink placeholder:text-muted focus:ring-accent",
+      button: "bg-accent text-surface hover:bg-accent/90",
+      icon: "bg-accent text-surface"
     },
     ink: {
-      container: "bg-[#1E1D19] border border-white/10",
-      heading: "text-[#F5F2EA]",
-      body: "text-[#B9B2A2]",
-      input: "bg-white/5 border-white/10 text-[#F5F2EA] placeholder:text-white/40 focus:ring-[#F5F2EA]",
-      button: "bg-[#F5F2EA] text-[#171613] hover:bg-white",
-      icon: "bg-[#F5F2EA] text-[#171613]"
+      container: "bg-ink border border-white/10",
+      heading: "text-paper",
+      body: "text-paper/70",
+      input: "bg-white/5 border-white/10 text-paper placeholder:text-white/40 focus:ring-paper",
+      button: "bg-paper text-ink hover:bg-white",
+      icon: "bg-paper text-ink"
     },
     paper: {
-      container: "bg-[#F5F2EA] border border-[#E2DFD5]",
-      heading: "text-[#171613]",
-      body: "text-[#6B6658]",
-      input: "bg-white border-[#E2DFD5] text-[#171613] placeholder:text-[#8A8375] focus:ring-[#2C4035]",
-      button: "bg-[#171613] text-white hover:bg-[#2E2B25]",
-      icon: "bg-[#171613] text-white"
+      container: "bg-paper border border-border",
+      heading: "text-ink",
+      body: "text-muted",
+      input: "bg-surface border-border text-ink placeholder:text-muted focus:ring-accent",
+      button: "bg-ink text-surface hover:bg-ink/90",
+      icon: "bg-ink text-surface"
     },
     forest: {
-      container: "bg-[#2C4035]",
-      heading: "text-[#F5F2EA]",
-      body: "text-[#C2E0D1]",
-      input: "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-[#C2E0D1]",
-      button: "bg-[#C2E0D1] text-[#2C4035] hover:bg-white",
-      icon: "bg-[#C2E0D1] text-[#2C4035]"
+      container: "bg-accent",
+      heading: "text-surface",
+      body: "text-surface/70",
+      input: "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-highlight",
+      button: "bg-surface text-accent hover:bg-surface-sunken",
+      icon: "bg-surface text-accent"
     }
   };
 

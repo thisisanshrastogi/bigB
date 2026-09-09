@@ -37,7 +37,7 @@ export default function InspectorForm() {
 
   if (!displayBlockId) {
     return (
-      <div className="flex flex-col gap-6 pt-2">
+      <div className="flex flex-col gap-6 p-6 pt-8">
         <p className="text-[12px] text-muted text-center italic px-4">
           Click any block on the canvas to edit its specific settings.
         </p>
@@ -73,28 +73,32 @@ export default function InspectorForm() {
   };
 
   return (
-    <div ref={containerRef} className="space-y-6">
-      <div className="pb-2">
+    <div ref={containerRef} className="flex flex-col h-full overflow-hidden">
+      {/* Fixed Header */}
+      <div className="px-6 pt-6 pb-3 shrink-0 border-b border-border">
         <h3 className="font-bold text-[10px] text-muted uppercase tracking-wider">{registryEntry.label || registryEntry.name} BLOCK</h3>
       </div>
 
-      <div className="pt-2">
-        {schema.map(field => (
-          <FieldRenderer 
-            key={field.key} 
-            field={field} 
-            value={block.data?.[field.key]} 
-            onChange={(newVal) => handleFieldChange(field.key, newVal)}
-          />
-        ))}
+      {/* Scrollable Fields */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 pb-24">
+        <div className="pt-2">
+          {schema.map(field => (
+            <FieldRenderer 
+              key={field.key} 
+              field={field} 
+              value={block.data?.[field.key]} 
+              onChange={(newVal) => handleFieldChange(field.key, newVal)}
+            />
+          ))}
+        </div>
+        
+        {/* Helper text specific to the block */}
+        {registryEntry.helpText && (
+          <p className="text-[10px] text-muted leading-relaxed mt-4 pt-6 border-t border-border/50 pr-4">
+            {registryEntry.helpText}
+          </p>
+        )}
       </div>
-      
-      {/* Helper text specific to the block, hardcoded for Card block for the design or from registry */}
-      {(registryEntry.helpText || block.type === 'card') && (
-        <p className="text-[10px] text-muted leading-relaxed mt-4 pt-6 border-t border-border/50 pr-4">
-          {registryEntry.helpText || "Card data stays linked. If the fee changes in the catalogue, every post using this block updates."}
-        </p>
-      )}
     </div>
   );
 }

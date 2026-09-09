@@ -53,8 +53,8 @@ function BubbleBtn({ onClick, isActive, title, children }) {
       title={title}
       className={`px-2 py-1.5 text-[14px] transition-colors flex items-center justify-center ${
         isActive
-          ? 'text-[#2C4035]'
-          : 'text-muted hover:text-ink hover:bg-surface'
+          ? 'text-accent bg-highlight/20 font-bold'
+          : 'text-muted hover:text-ink hover:bg-surface-sunken'
       }`}
     >
       {children}
@@ -112,7 +112,7 @@ export default function RichTextEditor({ value, onChange, onSplit, onSlashComman
     content: value || '',
     editorProps: {
       attributes: {
-        class: `focus:outline-none min-h-[32px] prose prose-p:my-0 prose-a:text-[#2C4035] prose-a:border-b-[1.5px] prose-a:border-[#8DC4AC] hover:prose-a:border-solid hover:prose-a:border-[#2C4035] prose-a:no-underline prose-strong:font-bold prose-code:text-[13px] prose-code:bg-[#F1EEE6] prose-code:px-[5px] prose-code:py-[2px] prose-code:rounded-[5px] max-w-none [text-wrap:pretty] ${sizeClass || 'text-[19px] leading-[1.85] text-body-ink'}`,
+        class: `focus:outline-none min-h-[32px] prose prose-p:my-0 prose-a:text-ink prose-a:border-b-[1.5px] prose-a:border-highlight hover:prose-a:border-solid hover:prose-a:border-highlight prose-a:no-underline prose-strong:font-bold prose-code:text-[13px] prose-code:bg-surface-sunken prose-code:px-[5px] prose-code:py-[2px] prose-code:rounded-[5px] max-w-none [text-wrap:pretty] ${sizeClass || 'text-[19px] leading-[1.85] text-ink'}`,
       },
     },
     onUpdate: ({ editor }) => {

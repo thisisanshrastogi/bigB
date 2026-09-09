@@ -15,7 +15,7 @@ export default function CodeBlock({ data }) {
 
   if (!code) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add code snippet...
       </div>
     );
@@ -30,16 +30,16 @@ export default function CodeBlock({ data }) {
   const lines = code.split('\n');
 
   return (
-    <div className="my-8 rounded-[20px] overflow-hidden bg-[#171613] flex flex-col relative group">
+    <div className="my-8 rounded-[20px] overflow-hidden bg-ink flex flex-col relative group">
       {filename && (
-        <div className="px-5 py-3 border-b border-white/10 text-[#B9B2A2] font-mono text-[12px] flex items-center justify-between">
+        <div className="px-5 py-3 border-b border-white/10 text-paper/70 font-mono text-[12px] flex items-center justify-between">
           <span>{filename}</span>
           <span className="uppercase text-[10px] tracking-wider opacity-50">{language}</span>
         </div>
       )}
 
       {!filename && (
-        <div className="absolute top-3 right-[52px] text-[#B9B2A2] font-mono text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-50 transition-opacity z-10 pointer-events-none">
+        <div className="absolute top-3 right-[52px] text-paper/70 font-mono text-[10px] uppercase tracking-wider opacity-0 group-hover:opacity-50 transition-opacity z-10 pointer-events-none">
           {language}
         </div>
       )}
@@ -68,7 +68,7 @@ export default function CodeBlock({ data }) {
                       {lineNum}
                     </span>
                   )}
-                  <span className="text-[#F5F2EA]">{line || ' '}</span>
+                  <span className="text-paper">{line || ' '}</span>
                 </div>
               );
             })}

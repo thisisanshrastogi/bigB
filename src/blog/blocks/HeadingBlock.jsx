@@ -1,11 +1,11 @@
 import { slugify } from '@/lib/blog/headings';
 
 export default function HeadingBlock({ data, editing }) {
-  const { level = 'h2', text = '', align = 'left', anchor = '', weight = 'default' } = data || {};
+  const { level = 'h2', text = '', align = 'left', anchor = '', weight = 'default', fontFamily = 'auto' } = data || {};
 
   if (!text) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add a descriptive heading...
       </div>
     );
@@ -14,12 +14,21 @@ export default function HeadingBlock({ data, editing }) {
   const Component = level || 'h2';
 
   const sizeMap = {
-    h2: 'font-serif text-[32px] leading-[1.2] tracking-[-0.01em] mt-[14px]',
-    h3: 'font-serif text-[24px] leading-[1.3] mt-[8px]',
-    h4: 'font-serif text-[19px] leading-[1.4] font-bold',
+    h2: 'text-[32px] leading-[1.2] tracking-[-0.01em] mt-[14px]',
+    h3: 'text-[24px] leading-[1.3] mt-[8px]',
+    h4: 'text-[19px] leading-[1.4] font-bold',
   };
 
-  const baseStyles = `text-ink relative group ${sizeMap[level] || sizeMap.h2}`;
+  let fontClass = '';
+  if (fontFamily === 'auto') {
+    fontClass = level === 'h4' ? 'font-sans' : 'font-serif';
+  } else if (fontFamily === 'serif') {
+    fontClass = 'font-serif';
+  } else if (fontFamily === 'sans') {
+    fontClass = 'font-sans';
+  }
+
+  const baseStyles = `text-ink relative group ${sizeMap[level] || sizeMap.h2} ${fontClass}`;
 
   const alignMap = {
     left: 'text-left',

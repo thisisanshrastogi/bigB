@@ -29,7 +29,7 @@ export default function StudioTopBar() {
   };
 
   return (
-    <div className="h-[62px] bg-white border-b border-rule flex items-center justify-between px-[22px] shrink-0 z-10 relative gap-[16px]">
+    <div className="h-[62px] bg-surface border-b border-rule flex items-center justify-between px-[22px] shrink-0 z-10 relative gap-[16px]">
       <div className="flex items-center gap-[16px] text-[13px] font-medium w-full">
         <Link href="/studio" className="text-muted hover:text-ink transition-colors flex items-center justify-center p-1" title="Back to Dashboard">
           <Home className="w-5 h-5" strokeWidth={2.5} />
@@ -77,29 +77,31 @@ export default function StudioTopBar() {
               {post.title || 'Untitled Post'}
             </h2>
 
-            <span className="text-faint text-[13px]">Draft · saved 12:04</span>
+            <span className="text-faint text-[13px]">
+              {post.status === 'published' ? 'Published' : 'Draft'} · {post.status === 'published' ? 'updated' : 'saved'} {post.updatedAt ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: 'numeric' }).format(new Date(post.updatedAt)) : 'just now'}
+            </span>
           </>
         )}
 
         <div className="flex-1"></div>
 
         {/* Toggle Pill */}
-        <div className="flex items-center bg-[#F1EEE6] p-[3px] rounded-full mr-2">
+        <div className="flex items-center bg-surface-sunken p-[3px] rounded-full mr-2">
           <button
             onClick={() => setViewMode('edit')}
-            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-95 ${viewMode === 'edit' ? 'bg-white shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
+            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-[0.98] ${viewMode === 'edit' ? 'bg-surface shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
           >
             Edit
           </button>
           <button
             onClick={() => setViewMode('details')}
-            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-95 ${viewMode === 'details' ? 'bg-white shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
+            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-[0.98] ${viewMode === 'details' ? 'bg-surface shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
           >
             Details
           </button>
           <button
             onClick={() => setViewMode('preview')}
-            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-95 ${viewMode === 'preview' ? 'bg-white shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
+            className={`px-[16px] py-[6px] text-[13px] font-bold rounded-full transition-all active:scale-[0.98] ${viewMode === 'preview' ? 'bg-surface shadow-sm text-ink' : 'text-muted hover:text-ink'}`}
           >
             Preview
           </button>
@@ -107,7 +109,7 @@ export default function StudioTopBar() {
 
         <button
           onClick={handleView}
-          className="flex items-center gap-1.5 text-muted hover:text-ink px-3 py-1.5 rounded-full text-[13px] font-bold transition-all w-[80px] justify-center active:scale-95"
+          className="flex items-center gap-1.5 text-muted hover:text-ink px-3 py-1.5 rounded-full text-[13px] font-bold transition-all w-[80px] justify-center active:scale-[0.98]"
           title="View in new tab"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -118,19 +120,12 @@ export default function StudioTopBar() {
 
         <button
           onClick={() => setIsAIModalOpen(true)}
-          className="flex items-center gap-2 text-ink  border-ink px-4 py-1.5 rounded-full text-[13px] font-bold hover:bg-ink hover:text-white transition-all active:scale-95"
+          className="flex items-center gap-2 bg-ink text-surface px-5 py-2 rounded-full text-[14px] font-bold hover:bg-ink/90 transition-all active:scale-[0.98]"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           AI Generate
-        </button>
-
-        <button
-          onClick={() => setViewMode('details')}
-          className="bg-ink text-white px-5 py-2 rounded-full text-[14px] font-bold hover:opacity-90 transition-all active:scale-95"
-        >
-          Publish
         </button>
       </div>
 

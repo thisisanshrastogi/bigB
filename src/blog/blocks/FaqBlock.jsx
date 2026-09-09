@@ -14,7 +14,7 @@ export default function FaqBlock({ data, editing }) {
 
   if (!items || items.length === 0) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add FAQ items...
       </div>
     );
@@ -52,11 +52,11 @@ export default function FaqBlock({ data, editing }) {
         </h3>
       )}
 
-      <div className="flex flex-col border-t border-[#E2DFD5]">
+      <div className="flex flex-col border-t border-border">
         {items.map((item, index) => {
           const isOpen = openIndex === index;
           return (
-            <div key={index} className="border-b border-[#E2DFD5]">
+            <div key={index} className="border-b border-border">
               <button 
                 className="w-full py-5 flex items-center justify-between text-left focus:outline-none group"
                 onClick={() => toggle(index)}
@@ -74,7 +74,7 @@ export default function FaqBlock({ data, editing }) {
                 className={`grid transition-[grid-template-rows] duration-240 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
               >
                 <div className="overflow-hidden">
-                  <p className="font-sans text-[17px] leading-[1.75] text-[#8A8375] m-0 pb-6 whitespace-pre-wrap">
+                  <p className="font-sans text-[17px] leading-[1.75] text-muted m-0 pb-6 whitespace-pre-wrap">
                     {item.a}
                   </p>
                 </div>

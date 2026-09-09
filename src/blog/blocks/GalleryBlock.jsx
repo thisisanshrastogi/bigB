@@ -14,7 +14,7 @@ export default function GalleryBlock({ data, editing }) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-16 px-6 rounded-[24px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-16 px-6 rounded-[24px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Drop images to create a gallery
       </div>
     );
@@ -29,7 +29,7 @@ export default function GalleryBlock({ data, editing }) {
         style={{ filter: 'saturate(0.78) contrast(0.95)' }}
       />
       {captionMode === 'per-item' && img.caption && (
-        <figcaption className="font-sans text-[13px] leading-[1.5] text-[#8A8375] mt-[10px] text-center">
+        <figcaption className="font-sans text-[13px] leading-[1.5] text-muted mt-[10px] text-center">
           {img.caption}
         </figcaption>
       )}
@@ -58,14 +58,14 @@ export default function GalleryBlock({ data, editing }) {
             <>
               <button 
                 onClick={() => scroll('left')}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-[34px] h-[34px] rounded-full bg-white/90 shadow-md flex items-center justify-center text-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-10"
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-[34px] h-[34px] rounded-full bg-surface shadow-md flex items-center justify-center text-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-sunken z-10"
                 aria-label="Previous image"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button 
                 onClick={() => scroll('right')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-[34px] h-[34px] rounded-full bg-white/90 shadow-md flex items-center justify-center text-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white z-10"
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-[34px] h-[34px] rounded-full bg-surface shadow-md flex items-center justify-center text-ink opacity-0 group-hover:opacity-100 transition-opacity hover:bg-surface-sunken z-10"
                 aria-label="Next image"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -104,7 +104,7 @@ export default function GalleryBlock({ data, editing }) {
     <div className="flex flex-col">
       {renderLayout()}
       {captionMode === 'shared' && sharedCaption && (
-        <div className="font-sans text-[13px] leading-[1.5] text-[#8A8375] mt-[10px] text-center">
+        <div className="font-sans text-[13px] leading-[1.5] text-muted mt-[10px] text-center">
           {sharedCaption}
         </div>
       )}

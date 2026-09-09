@@ -177,13 +177,13 @@ export default function BlockCanvas({ localBlocks }) {
         
         {blocks.length === 0 && (
           <div className="flex flex-col items-center justify-center mt-32 text-center text-muted max-w-sm mx-auto">
-            <div className="w-16 h-16 rounded-full bg-white shadow-sm ring-1 ring-border flex items-center justify-center mb-6 text-faint">
+            <div className="w-16 h-16 rounded-full bg-surface shadow-sm ring-1 ring-border flex items-center justify-center mb-6 text-muted-soft">
               <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4v16m8-8H4" />
               </svg>
             </div>
             <p className="text-[20px] font-serif text-ink mb-2">A blank canvas</p>
-            <p className="text-[14px] text-faint leading-relaxed">Drag a block from the palette on the left to start structuring your post.</p>
+            <p className="text-[14px] text-muted-soft leading-relaxed">Drag a block from the palette on the left to start structuring your post.</p>
           </div>
         )}
         

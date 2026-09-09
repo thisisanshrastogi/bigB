@@ -12,7 +12,7 @@ export default function CalloutBlock({ data, editing }) {
 
   if (!title && !body && !figure) {
     return (
-      <div className="border border-dashed border-[#D6CFBF] py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
+      <div className="border border-dashed border-border-strong py-8 px-6 rounded-[20px] flex flex-col items-center justify-center text-muted font-sans text-[14px]">
         Add callout content...
       </div>
     );
@@ -21,44 +21,49 @@ export default function CalloutBlock({ data, editing }) {
   // Presentation: Rule
   if (presentation === 'rule') {
     return (
-      <div className="border-y border-[#E2DFD5] py-8 my-8 flex flex-col md:flex-row gap-6 items-start">
-        {variant === 'stat' && figure && (
-          <div className="font-serif text-[40px] md:text-[44px] text-[#2C4035] leading-none shrink-0 w-[120px]">
+      <div className="border-y border-border py-8 my-8 flex flex-col md:flex-row gap-6 items-start">
+        {variant?.startsWith('stat') && figure && (
+          <div className="font-serif text-[40px] md:text-[44px] text-accent leading-none shrink-0 w-[120px]">
             {figure}
           </div>
         )}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           {title && <h4 className="font-sans font-bold text-[16.5px] text-ink mb-2">{title}</h4>}
-          {body && <p className="font-sans text-[14.5px] md:text-[16px] leading-[1.6] text-[#4F5C52] m-0 whitespace-pre-wrap">{body}</p>}
+          {body && <p className="font-sans text-[14.5px] md:text-[16px] leading-[1.6] text-ink/80 m-0 whitespace-pre-wrap">{body}</p>}
         </div>
       </div>
     );
   }
 
   // Presentation: Boxed
-  let bgClass = 'bg-[#C2E0D1]';
-  let textClass = 'text-[#2C4035]';
-  let bodyTextClass = 'text-[#4F5C52]';
+  let bgClass = 'bg-highlight';
+  let textClass = 'text-accent';
+  let bodyTextClass = 'text-accent/80';
   let DefaultIcon = Info;
 
   if (variant === 'warn') {
-    bgClass = 'bg-[#F5E6E6]';
-    textClass = 'text-[#8A5A2B]';
-    bodyTextClass = 'text-[#8A5A2B]/80';
+    bgClass = 'bg-warn-bg';
+    textClass = 'text-warn-ink';
+    bodyTextClass = 'text-warn-ink/80';
     DefaultIcon = AlertTriangle;
   } else if (variant === 'success') {
-    bgClass = 'bg-[#D1E0C2]';
+    bgClass = 'bg-highlight';
     DefaultIcon = CheckCircle;
   } else if (variant === 'stat') {
+    DefaultIcon = BarChart2;
+  } else if (variant === 'stat-forest') {
+    bgClass = 'bg-accent';
+    textClass = 'text-surface';
+    bodyTextClass = 'text-surface/80';
     DefaultIcon = BarChart2;
   }
 
   return (
     <div className={`${bgClass} rounded-[22px] md:rounded-[24px] px-[28px] py-[24px] my-8 flex gap-5 items-start`}>
       {/* Icon or Stat Figure */}
-      {variant === 'stat' ? (
+      {variant?.startsWith('stat') ? (
         figure && (
-          <div className="font-serif text-[40px] md:text-[44px] text-[#2C4035] leading-none shrink-0 min-w-[80px]">
+          <div className={`font-serif text-[40px] md:text-[44px] ${textClass} leading-none shrink-0 min-w-[80px]`}>
             {figure}
           </div>
         )
