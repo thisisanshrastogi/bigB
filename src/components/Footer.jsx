@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import Logo from './Logo';
 
 export default function Footer() {
@@ -27,17 +27,17 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-ink text-[13px] uppercase tracking-widest mb-6">Company</h4>
             <div className="flex flex-col gap-5 text-sm text-muted">
-              <Link to="/about" className="hover:text-ink transition-colors">About Us</Link>
-              <Link to="/contact" className="hover:text-ink transition-colors">Contact</Link>
-              <Link to="/privacy-policy" className="hover:text-ink transition-colors">Privacy Policy</Link>
+              <Link href="/about" className="hover:text-ink transition-colors">About Us</Link>
+              <Link href="/contact" className="hover:text-ink transition-colors">Contact</Link>
+              <Link href="/privacy-policy" className="hover:text-ink transition-colors">Privacy Policy</Link>
             </div>
           </div>
 
           <div>
             <h4 className="font-bold text-ink text-[13px] uppercase tracking-widest mb-6">Resources</h4>
             <div className="flex flex-col gap-5 text-sm text-muted">
-              <Link to="/faq" className="hover:text-ink transition-colors">FAQ</Link>
-              <Link to="/supported-banks" className="hover:text-ink transition-colors">Supported Banks</Link>
+              <Link href="/faq" className="hover:text-ink transition-colors">FAQ</Link>
+              <Link href="/supported-banks" className="hover:text-ink transition-colors">Supported Banks</Link>
               {/* <Link to="#" className="hover:text-ink transition-colors">Reward Calculator</Link> */}
               <a href="https://cards.amalgamic.io/auth/signin" className="hover:text-ink transition-colors">Sign In</a>
 
