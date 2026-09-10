@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createPortal } from 'react-dom';
 import StatusPill from './StatusPill';
+import { ConfirmDialog } from '@/ui/Dialog';
 
 export default function PostsTable({ posts = [] }) {
   const [mounted, setMounted] = useState(false);
@@ -146,35 +147,19 @@ export default function PostsTable({ posts = [] }) {
         ))}
       </tbody>
     </table>
-      {actionDialog.isOpen && mounted && createPortal(
-        <div className="fixed inset-0 bg-ink/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-[18px] font-bold text-ink mb-2">
-              {actionDialog.type === 'unpublish' ? 'Unpublish Post' : 'Delete Post'}
-            </h3>
-            <p className="text-[14px] text-muted-soft mb-6">
-              {actionDialog.type === 'unpublish' 
-                ? 'Are you sure you want to unpublish this post? It will be moved to drafts and hidden from the public blog.' 
-                : 'Are you sure you want to permanently delete this post? This action cannot be undone.'}
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button 
-                onClick={() => setActionDialog({ isOpen: false, type: null, post: null })} 
-                className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={confirmAction} 
-                className={`px-5 py-2 rounded-full text-[13px] font-semibold text-surface ${actionDialog.type === 'delete' ? 'bg-warn-ink hover:bg-warn-ink/90' : 'bg-ink hover:bg-ink/90'}`}
-              >
-                {actionDialog.type === 'unpublish' ? 'Unpublish' : 'Delete'}
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      <ConfirmDialog
+        open={actionDialog.isOpen}
+        onClose={() => setActionDialog({ isOpen: false, type: null, post: null })}
+        onConfirm={confirmAction}
+        title={actionDialog.type === 'unpublish' ? 'Unpublish Post' : 'Delete Post'}
+        description={
+          actionDialog.type === 'unpublish' 
+            ? 'Are you sure you want to unpublish this post? It will be moved to drafts and hidden from the public blog.' 
+            : 'Are you sure you want to permanently delete this post? This action cannot be undone.'
+        }
+        confirmText={actionDialog.type === 'unpublish' ? 'Unpublish' : 'Delete'}
+        isDestructive={actionDialog.type === 'delete'}
+      />
     </>
   );
 }

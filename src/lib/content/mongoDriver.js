@@ -1,22 +1,48 @@
+import mongoose from 'mongoose';
 import { ContentStore } from './index';
 import connectToDatabase from '../mongoose';
 import Post from '../models/Post';
 import Admin from '../models/Admin';
 
+// Fields the public blog index actually reads. Keep in sync with BlogClient.
+const LIST_FIELDS = [
+  'slug',
+  'title',
+  'excerpt',
+  'publishedAt',
+  'readingTimeMinutes',
+  'category',
+  'heroImage',
+  'hero.url',
+  'author.name',
+].join(' ');
+
 export class MongoContentStore extends ContentStore {
   async getPosts() {
     await connectToDatabase();
     // Use lean() to return POJOs instead of Mongoose documents
-    // Ensure _id is converted to id
     const posts = await Post.find().sort({ createdAt: -1 }).lean();
     return posts.map(this._mapPost);
   }
 
+  // Public blog index: published only, list fields only, sorted by publish date.
+  async getPublishedPosts() {
+    await connectToDatabase();
+    const posts = await Post.find({ status: 'published' })
+      .select(LIST_FIELDS)
+      .sort({ publishedAt: -1 })
+      .lean();
+
+    return posts.map(({ _id, ...rest }) => ({ id: _id.toString(), ...rest }));
+  }
+
   async getPost(id) {
     await connectToDatabase();
-    // Try to find by id, if not fallback to slug
-    const post = await Post.findById(id).lean().catch(() => null) || await Post.findOne({ slug: id }).lean();
-    
+
+    const post = mongoose.isValidObjectId(id)
+      ? await Post.findById(id).lean()
+      : await Post.findOne({ slug: id }).lean();
+
     if (!post) throw new Error(`Post not found: ${id}`);
     return this._mapPost(post);
   }
@@ -32,7 +58,7 @@ export class MongoContentStore extends ContentStore {
     await connectToDatabase();
     // Note: We're ignoring `version` for now (Optimistic Concurrency Control bypassed)
     // To support OCC, we would use `{ _id: id, __v: version }` and increment `__v`.
-    
+
     const updated = await Post.findByIdAndUpdate(
       id,
       { $set: postData },

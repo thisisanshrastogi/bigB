@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 import { FileText, Image as ImageIcon, LayoutTemplate, Settings, LogOut } from 'lucide-react';
+import { ConfirmDialog } from '@/ui/Dialog';
 
 export default function StudioSidebar({ user }) {
   const pathname = usePathname();
@@ -92,31 +93,14 @@ export default function StudioSidebar({ user }) {
         </div>
       </div>
 
-      {showSignOutDialog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-brand/20 backdrop-blur-sm">
-          <div className="bg-surface rounded-2xl premium-shadow p-6 w-full max-w-sm border border-border/50 animate-in fade-in zoom-in-95 duration-200">
-            <h3 className="text-lg font-serif text-brand font-bold mb-2">Sign Out</h3>
-            <p className="text-[14px] text-muted-soft mb-6 leading-relaxed">
-              Are you sure you want to sign out of the BigB Studio? You will need to authenticate with Google again to re-enter.
-            </p>
-            <div className="flex items-center justify-end gap-3">
-              <button 
-                onClick={() => setShowSignOutDialog(false)}
-                className="px-4 py-2 rounded-lg text-[13px] font-medium text-ink hover:bg-surface-sunken transition-colors"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={() => signOut({ callbackUrl: '/studio/login' })}
-                className="px-4 py-2 rounded-lg text-[13px] font-semibold bg-ink text-surface shadow-sm hover:bg-ink/90 transition-colors flex items-center gap-2"
-              >
-                <LogOut size={14} />
-                Sign Out
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={showSignOutDialog}
+        onClose={() => setShowSignOutDialog(false)}
+        onConfirm={() => signOut({ callbackUrl: '/studio/login' })}
+        title="Sign Out"
+        description="Are you sure you want to sign out of the BigB Studio? You will need to authenticate with Google again to re-enter."
+        confirmText="Sign Out"
+      />
     </>
   );
 }

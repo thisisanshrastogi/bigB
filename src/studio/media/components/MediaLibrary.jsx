@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search } from 'lucide-react';
 import Loader from '@/components/Loader';
+import { BaseDialog, ConfirmDialog } from '@/ui/Dialog';
 
 export default function MediaLibrary() {
   const [images, setImages] = useState([]);
@@ -337,36 +338,29 @@ export default function MediaLibrary() {
       </div>
 
       {/* Modals */}
-      {renameDialog.isOpen && (
-        <div className="fixed inset-0 bg-ink/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-[18px] font-bold text-ink mb-4">Rename Image</h3>
-            <input
-              type="text"
-              value={renameDialog.name}
-              onChange={(e) => setRenameDialog(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full bg-bg border border-border-strong rounded-xl p-3 text-[14px] text-ink focus:outline-none focus:border-accent mb-6"
-            />
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => setRenameDialog({ isOpen: false, key: null, name: '' })} className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken">Cancel</button>
-              <button onClick={handleRename} className="bg-ink text-surface px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-ink/90">Save</button>
-            </div>
-          </div>
+      <BaseDialog open={renameDialog.isOpen} onClose={() => setRenameDialog({ isOpen: false, key: null, name: '' })}>
+        <h3 className="text-[18px] font-bold text-ink mb-4">Rename Image</h3>
+        <input
+          type="text"
+          value={renameDialog.name}
+          onChange={(e) => setRenameDialog(prev => ({ ...prev, name: e.target.value }))}
+          className="w-full bg-bg border border-border-strong rounded-xl p-3 text-[14px] text-ink focus:outline-none focus:border-accent mb-6"
+        />
+        <div className="flex gap-3 justify-end">
+          <button onClick={() => setRenameDialog({ isOpen: false, key: null, name: '' })} className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken transition-colors">Cancel</button>
+          <button onClick={handleRename} className="bg-ink text-surface px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-ink/90 transition-colors">Save</button>
         </div>
-      )}
+      </BaseDialog>
 
-      {deleteDialog.isOpen && (
-        <div className="fixed inset-0 bg-ink/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-[18px] font-bold text-ink mb-2">Delete Image</h3>
-            <p className="text-[14px] text-muted-soft mb-6">Are you sure you want to delete this image? This action cannot be undone.</p>
-            <div className="flex gap-3 justify-end">
-              <button onClick={() => setDeleteDialog({ isOpen: false, key: null })} className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken">Cancel</button>
-              <button onClick={handleDelete} className="bg-warn-ink text-surface px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-warn-ink/90">Delete</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        open={deleteDialog.isOpen}
+        onClose={() => setDeleteDialog({ isOpen: false, key: null })}
+        onConfirm={handleDelete}
+        title="Delete Image"
+        description="Are you sure you want to delete this image? This action cannot be undone."
+        confirmText="Delete"
+        isDestructive={true}
+      />
 
       {previewDialog.isOpen && (
         <div 

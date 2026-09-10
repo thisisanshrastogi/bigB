@@ -94,6 +94,32 @@ export async function generateMetadata({ params, searchParams }) {
   };
 }
 
+
+
+export function NotFound() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[#F5F2EA] px-6 py-24 text-center font-sans text-ink">
+      <Navbar />
+      <p className="text-[13px] font-medium tracking-[0.18em] text-muted">404</p>
+
+      <h1 className="mt-6 max-w-3xl font-serif text-[2.6rem] leading-[1.08] tracking-[-0.015em] text-brand sm:text-[3.2rem] md:text-[3.9rem]">
+        We couldn&rsquo;t find that page.
+      </h1>
+
+      <p className="mt-5 max-w-lg text-[16px] leading-relaxed text-muted md:text-[17px]">
+        The link may be old, or the post has been taken down.
+      </p>
+
+      <Link
+        href="/"
+        className="mt-10 rounded-full bg-ink px-7 py-3.5 text-[15px] font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+      >
+        Back to the blog
+      </Link>
+    </main>
+  );
+}
+
 export default async function PostPage({ params, searchParams }) {
   const { slug } = await params;
   const { preview } = await searchParams;
@@ -101,14 +127,7 @@ export default async function PostPage({ params, searchParams }) {
 
   if (!post) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-paper">
-        <div className="text-center">
-          <h1 className="mb-4 font-serif text-3xl font-bold text-ink">Post not found</h1>
-          <Link href="/blog" className="font-semibold text-accent hover:underline">
-            Back to the blog
-          </Link>
-        </div>
-      </div>
+      <NotFound />
     );
   }
 
