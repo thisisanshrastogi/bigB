@@ -21,16 +21,25 @@ export default function NewsletterBlock({ data, editing }) {
     );
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (editing) return;
     if (!email) return;
 
     setStatus('loading');
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      
+      if (!res.ok) throw new Error('Failed to subscribe');
       setStatus('success');
-    }, 1000);
+    } catch (err) {
+      console.error(err);
+      setStatus('error');
+    }
   };
 
   const themeMap = {
@@ -83,11 +92,8 @@ export default function NewsletterBlock({ data, editing }) {
             </svg>
           </div>
           <h3 className={`font-serif text-[24px] md:text-[28px] leading-[1.3] m-0 mb-2 ${currentTheme.heading}`}>
-            You're subscribed
+            You have been added to the mailing list.
           </h3>
-          <p className={`font-sans text-[16px] m-0 ${currentTheme.body}`}>
-            Check your inbox for a welcome email.
-          </p>
         </div>
       ) : (
         <div className={isSplit ? "grid md:grid-cols-2 gap-8 items-center text-left" : "text-center"}>
@@ -124,6 +130,11 @@ export default function NewsletterBlock({ data, editing }) {
             {editing && !listId && (
               <div className="absolute -bottom-8 left-0 right-0 text-[11px] text-red-500 text-center">
                 Warning: Missing ESP List ID
+              </div>
+            )}
+            {status === 'error' && (
+              <div className="absolute -bottom-8 left-0 right-0 text-[13px] text-red-400 text-center">
+                Something went wrong. Please try again.
               </div>
             )}
           </form>

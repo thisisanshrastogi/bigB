@@ -3,6 +3,7 @@ import { ContentStore } from './index';
 import connectToDatabase from '../mongoose';
 import Post from '../models/Post';
 import Admin from '../models/Admin';
+import Subscriber from '../models/Subscriber';
 
 // Fields the public blog index actually reads. Keep in sync with BlogClient.
 const LIST_FIELDS = [
@@ -111,6 +112,17 @@ export class MongoContentStore extends ContentStore {
     await connectToDatabase();
     await Admin.findOneAndDelete({ email });
     return email;
+  }
+
+  // Newsletter methods
+  async addSubscriber(email) {
+    await connectToDatabase();
+    const subscriber = await Subscriber.findOneAndUpdate(
+      { email },
+      { $set: { status: 'subscribed' } },
+      { upsert: true, new: true, runValidators: true }
+    ).lean();
+    return subscriber;
   }
 }
 

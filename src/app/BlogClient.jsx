@@ -30,6 +30,10 @@ export default function BlogClient() {
   const [category, setCategory] = useState('All');
   const [newestFirst, setNewestFirst] = useState(true);
 
+  // Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState('idle'); // idle, loading, success, error
+
   useEffect(() => {
     let alive = true;
     fetch('/api/posts')
@@ -92,6 +96,26 @@ export default function BlogClient() {
   const reset = () => {
     setSearch('');
     setCategory('All');
+  };
+
+  const handleNewsletterSubmit = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+
+    setNewsletterStatus('loading');
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      });
+      
+      if (!res.ok) throw new Error('Failed to subscribe');
+      setNewsletterStatus('success');
+    } catch (err) {
+      console.error(err);
+      setNewsletterStatus('error');
+    }
   };
 
   return (
@@ -306,22 +330,33 @@ export default function BlogClient() {
         id="newsletter-section"
         className="mx-auto max-w-[1300px] px-4 pb-24 md:px-6 lg:px-28"
       >
-        <div className="relative overflow-hidden rounded-3xl bg-forest px-8 py-12 md:px-14 md:py-16">
-          <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-md text-white">
-              <h2 className="font-serif text-[1.9rem] leading-[1.15] md:text-[2.2rem]">
+        <div className="relative overflow-hidden rounded-[22px] bg-forest px-6 py-10 md:px-[40px] md:py-[48px]">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center text-left">
+            <div className="text-white">
+              <h2 className="font-serif text-[28px] md:text-[32px] leading-[1.3] m-0 mb-4">
                 The fine print, in your inbox on Thursdays
               </h2>
-              <p className="mt-4 text-[14px] leading-relaxed text-white/60">
+              <p className="font-sans text-[16px] leading-[1.6] m-0 text-white/70">
                 Two posts a week. No affiliate spam, and one click to leave.
               </p>
             </div>
 
-            <form
-              className="w-full md:w-auto"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="flex flex-col gap-3 sm:flex-row">
+            {newsletterStatus === 'success' ? (
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-forest">
+                  <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <p className="font-serif text-[20px] md:text-[24px] text-white m-0 leading-tight">
+                  You have been added to the mailing list.
+                </p>
+              </div>
+            ) : (
+              <form
+                className="w-full relative flex flex-col sm:flex-row gap-3"
+                onSubmit={handleNewsletterSubmit}
+              >
                 <label htmlFor="newsletter-email" className="sr-only">
                   Email address
                 </label>
@@ -329,17 +364,26 @@ export default function BlogClient() {
                   id="newsletter-email"
                   type="email"
                   required
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  disabled={newsletterStatus === 'loading'}
                   placeholder="you@example.com"
-                  className="w-full rounded-full border border-white/20 bg-white/5 px-5 py-3 text-[14px] text-white placeholder-white/40 focus:border-white/50 focus:outline-none sm:w-64"
+                  className="w-full sm:flex-1 h-[56px] px-6 rounded-full border border-white/20 bg-white/10 text-[16px] text-white placeholder-white/50 focus:border-white/50 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all disabled:opacity-50 min-w-0"
                 />
                 <button
                   type="submit"
-                  className="whitespace-nowrap rounded-full bg-white px-6 py-3 text-[14px] font-medium text-forest transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  disabled={newsletterStatus === 'loading'}
+                  className="w-full sm:w-auto h-[56px] px-10 rounded-full bg-white text-[16px] font-bold text-forest transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:opacity-50 shrink-0"
                 >
-                  Subscribe
+                  {newsletterStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}
                 </button>
-              </div>
-            </form>
+                {newsletterStatus === 'error' && (
+                  <div className="absolute -bottom-8 left-0 text-[13px] text-red-300">
+                    Something went wrong. Please try again.
+                  </div>
+                )}
+              </form>
+            )}
           </div>
         </div>
       </section>

@@ -68,3 +68,4 @@ export const Media = mongoose.models.Media || mongoose.model('Media', MediaSchem
 export const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
 export const Author = mongoose.models.Author || mongoose.model('Author', AuthorSchema);
 export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
+export const Subscriber = mongoose.models.Subscriber || require('./Subscriber').default;
