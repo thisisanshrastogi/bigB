@@ -2,6 +2,8 @@
 import { useEditor } from '@/studio/EditorProvider';
 import { useState, useEffect, useRef, useId } from 'react';
 import { validatePost } from '@/lib/utils/postValidation';
+import { ImageFieldRenderer, CustomSelect } from './FieldRenderer';
+import MediaLibraryModal from './MediaLibraryModal';
 
 const inputClass =
   "w-full px-4 py-3 text-[15px] rounded-xl border border-rule bg-white text-ink placeholder:text-faint outline-none transition-colors focus:border-[#2E3C30] focus:ring-2 focus:ring-[#2E3C30]/10";
@@ -27,25 +29,7 @@ function Field({ label, htmlFor, hint, children }) {
   );
 }
 
-const Select = ({ id, value, onChange, children, selectRef }) => (
-  <div className="relative">
-    <select
-      ref={selectRef}
-      id={id}
-      value={value}
-      onChange={onChange}
-      className={`${inputClass} appearance-none cursor-pointer pr-10`}
-    >
-      {children}
-    </select>
-    <svg
-      className="w-4 h-4 text-faint absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
-      fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-    </svg>
-  </div>
-);
+
 
 function StatusIcon({ tone }) {
   const styles = {
@@ -96,6 +80,7 @@ export default function PostDetailsView() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
+  const [isSocialModalOpen, setIsSocialModalOpen] = useState(false);
 
   const uid = useId();
   const excerptRef = useRef(null);
@@ -161,7 +146,10 @@ export default function PostDetailsView() {
 
   const checklistItems = [
     { done: excerpt.length > 0, label: `Excerpt written · ${excerpt.length} chars`, onClick: () => focusField(excerptRef) },
-    { done: !!post.heroImage, label: `Hero image ${post.heroImage ? 'set' : 'missing'}`, onClick: () => focusField(heroImageRef) },
+    { done: !!post.heroImage, label: `Hero image ${post.heroImage ? 'set' : 'missing'}`, onClick: () => {
+      const el = document.getElementById(`${uid}-hero-container`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }},
     { done: !!post.category, label: `Category · ${post.category || 'Missing'}`, onClick: () => focusField(categoryRef) },
     { done: !!post.slug, label: 'URL set', onClick: () => focusField(slugRef) },
   ];
@@ -309,17 +297,24 @@ export default function PostDetailsView() {
                 <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted">Taxonomy</h3>
 
                 <Field label="Category" htmlFor={`${uid}-category`}>
-                  <Select
-                    id={`${uid}-category`}
-                    value={post.category || ''}
-                    onChange={e => updatePost({ category: e.target.value })}
-                    selectRef={categoryRef}
-                  >
-                    <option value="">Select category</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Design">Design</option>
-                    <option value="Company">Company</option>
-                  </Select>
+                  <div ref={categoryRef} id={`${uid}-category`}>
+                    <CustomSelect
+                      value={post.category || ''}
+                      onChange={v => updatePost({ category: v })}
+                      placeholder="Select category"
+                      options={[
+                        { label: 'Engineering', value: 'Engineering' },
+                        { label: 'Design', value: 'Design' },
+                        { label: 'Product', value: 'Product' },
+                        { label: 'Company', value: 'Company' },
+                        { label: 'Tutorial', value: 'Tutorial' },
+                        { label: 'News', value: 'News' },
+                        { label: 'Culture', value: 'Culture' },
+                        { label: 'Research', value: 'Research' },
+                        { label: 'Security', value: 'Security' }
+                      ]}
+                    />
+                  </div>
                 </Field>
 
                 <Field
@@ -350,16 +345,16 @@ export default function PostDetailsView() {
                 <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted">Access</h3>
 
                 <Field label="Visibility" htmlFor={`${uid}-visibility`}>
-                  <Select
-                    id={`${uid}-visibility`}
+                  <CustomSelect
                     value={post.visibility || 'public'}
-                    onChange={e => updatePost({ visibility: e.target.value })}
-                  >
-                    <option value="public">Public</option>
-                    <option value="unlisted">Unlisted (noindex)</option>
-                    <option value="members-only">Members only</option>
-                    <option value="password">Password protected</option>
-                  </Select>
+                    onChange={v => updatePost({ visibility: v })}
+                    options={[
+                      { label: 'Public', value: 'public' },
+                      { label: 'Unlisted (noindex)', value: 'unlisted' },
+                      { label: 'Members only', value: 'members-only' },
+                      { label: 'Password protected', value: 'password' }
+                    ]}
+                  />
                 </Field>
 
                 {post.visibility === 'password' && (
@@ -447,41 +442,44 @@ export default function PostDetailsView() {
             {/* MEDIA + SOCIAL PREVIEW */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
-                <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted">Media overrides</h3>
-
-                <Field label="Hero image URL" htmlFor={`${uid}-hero`}>
-                  <input
-                    ref={heroImageRef}
-                    id={`${uid}-hero`}
-                    type="text"
-                    value={post.heroImage || ''}
-                    onChange={e => updatePost({ heroImage: e.target.value })}
-                    className={inputClass}
-                    placeholder="https://..."
+                <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted">Hero Image</h3>
+                <div id={`${uid}-hero-container`}>
+                  <ImageFieldRenderer
+                    field={{ label: "" }}
+                    value={post.heroImage}
+                    onChange={v => updatePost({ heroImage: v })}
+                    aspectClass="aspect-[2/1]"
                   />
-                </Field>
-
-                <Field label="Social share image URL" htmlFor={`${uid}-social`}>
-                  <input
-                    id={`${uid}-social`}
-                    type="text"
-                    value={post.socialShareImage || ''}
-                    onChange={e => updatePost({ socialShareImage: e.target.value })}
-                    className={inputClass}
-                    placeholder={post.heroImage || 'Overrides hero image...'}
-                  />
-                </Field>
+                </div>
               </Card>
 
               <Card tone="white" className="border-[#2E3C30]/15">
-                <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider">Social preview</h3>
-                <div className="border border-rule rounded-[16px] overflow-hidden flex flex-col shadow-sm bg-white">
-                  <div className="h-[140px] bg-placeholder flex items-center justify-center text-faint relative overflow-hidden">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-[11px] font-bold text-muted uppercase tracking-wider">Social preview</h3>
+                  {post.socialShareImage && (
+                    <button 
+                      onClick={() => updatePost({ socialShareImage: '' })}
+                      className="text-[11px] font-bold text-warn-ink hover:underline"
+                    >
+                      Clear custom image
+                    </button>
+                  )}
+                </div>
+                <div className="border border-rule rounded-[16px] overflow-hidden flex flex-col shadow-sm bg-white group relative">
+                  <div 
+                    onClick={() => setIsSocialModalOpen(true)}
+                    className="h-[140px] bg-placeholder flex items-center justify-center text-faint relative overflow-hidden cursor-pointer"
+                  >
                     {socialImage ? (
-                      <img src={socialImage} alt="Social share preview" className="absolute inset-0 w-full h-full object-cover" />
+                      <img src={socialImage} alt="Social share preview" className="absolute inset-0 w-full h-full object-cover group-hover:opacity-90 transition-opacity" />
                     ) : (
                       <span className="text-[12px]">Add a hero image to preview</span>
                     )}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <span className="text-white text-[12px] font-bold px-3 py-1.5 rounded-full bg-black/50 backdrop-blur-sm">
+                        {post.socialShareImage ? 'Change Image' : 'Set Custom Image'}
+                      </span>
+                    </div>
                   </div>
                   <div className="p-4 flex flex-col gap-1 bg-[#F7F5EF]">
                     <div className="text-[11px] text-faint uppercase tracking-wider">amalgamic.io</div>
@@ -489,6 +487,15 @@ export default function PostDetailsView() {
                     <div className="text-[13px] text-muted line-clamp-2 leading-[1.4]">{effectiveMetaDescription || 'No description yet.'}</div>
                   </div>
                 </div>
+                
+                <MediaLibraryModal 
+                  isOpen={isSocialModalOpen}
+                  onClose={() => setIsSocialModalOpen(false)}
+                  onSelect={(url) => {
+                    updatePost({ socialShareImage: url });
+                    setIsSocialModalOpen(false);
+                  }}
+                />
               </Card>
             </div>
           </div>

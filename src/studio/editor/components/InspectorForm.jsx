@@ -75,7 +75,7 @@ export default function InspectorForm() {
   return (
     <div ref={containerRef} className="flex flex-col h-full overflow-hidden">
       {/* Fixed Header */}
-      <div className="px-6 pt-6 pb-3 shrink-0 border-b border-border">
+      <div className="px-6 pt-6 pb-3 shrink-0 border-b  border-border">
         <h3 className="font-bold text-[10px] text-muted uppercase tracking-wider">{registryEntry.label || registryEntry.name} BLOCK</h3>
       </div>
 
@@ -83,15 +83,15 @@ export default function InspectorForm() {
       <div className="flex-1 overflow-y-auto overflow-x-hidden px-6 pb-24">
         <div className="pt-2">
           {schema.map(field => (
-            <FieldRenderer 
-              key={field.key} 
-              field={field} 
-              value={block.data?.[field.key]} 
+            <FieldRenderer
+              key={field.key}
+              field={field}
+              value={block.data?.[field.key]}
               onChange={(newVal) => handleFieldChange(field.key, newVal)}
             />
           ))}
         </div>
-        
+
         {/* Helper text specific to the block */}
         {registryEntry.helpText && (
           <p className="text-[10px] text-muted leading-relaxed mt-4 pt-6 border-t border-border/50 pr-4">

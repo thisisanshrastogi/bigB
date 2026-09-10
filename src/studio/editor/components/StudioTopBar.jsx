@@ -118,15 +118,24 @@ export default function StudioTopBar() {
           <span className="hidden sm:inline">View</span>
         </button>
 
-        <button
-          onClick={() => setIsAIModalOpen(true)}
-          className="flex items-center gap-2 bg-ink text-surface px-5 py-2 rounded-full text-[14px] font-bold hover:bg-ink/90 transition-all active:scale-[0.98]"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          AI Generate
-        </button>
+        {viewMode === 'preview' ? (
+          <button
+            onClick={() => setViewMode('details')}
+            className="flex items-center justify-center gap-2 bg-ink text-surface w-[140px] py-2 rounded-full text-[14px] font-bold hover:bg-ink/90 transition-all active:scale-[0.98]"
+          >
+            Publish
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsAIModalOpen(true)}
+            className="flex items-center justify-center gap-2 bg-ink text-surface w-[140px] py-2 rounded-full text-[14px] font-bold hover:bg-ink/90 transition-all active:scale-[0.98]"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            AI Generate
+          </button>
+        )}
       </div>
 
       <AIGeneratorModal

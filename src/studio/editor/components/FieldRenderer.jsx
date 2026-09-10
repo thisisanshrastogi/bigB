@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import RichTextEditor from './RichTextEditor';
 import MediaLibraryModal from './MediaLibraryModal';
 
-function CustomSelect({ value, onChange, options, placeholder = 'Select an option...' }) {
+export function CustomSelect({ value, onChange, options, placeholder = 'Select an option...' }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   
@@ -61,17 +61,17 @@ function CustomSelect({ value, onChange, options, placeholder = 'Select an optio
   );
 }
 
-function ImageFieldRenderer({ field, value, onChange }) {
-  const { key, label, help } = field;
+export function ImageFieldRenderer({ field, value, onChange, aspectClass = "aspect-video" }) {
+  const { key, label, help } = field || {};
   const imageUrl = typeof value === 'string' ? value : (value?.url || '');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <div className="mb-6">
-      <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>
+    <div className="mb-6 w-full">
+      {label && <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>}
       <div className="flex flex-col gap-2">
         <div 
-          className="aspect-video bg-[#F2EFE8] border border-dashed border-border rounded-lg flex items-center justify-center relative overflow-hidden group cursor-pointer hover:border-forest"
+          className={`${aspectClass} bg-[#F2EFE8] border border-dashed border-border rounded-lg flex items-center justify-center relative overflow-hidden group cursor-pointer hover:border-forest`}
           onClick={() => setIsModalOpen(true)}
         >
           {imageUrl ? (

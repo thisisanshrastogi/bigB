@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useReadingProgress } from '@/blog/hooks/useReadingProgress';
 import { slugify } from '@/lib/blog/headings';
 import { Link as LinkIcon } from 'lucide-react';
@@ -92,6 +92,9 @@ export default function TableOfContents({
     return () => observer.disconnect();
   }, [initialHeadings.length]);
 
+  const isScrollingTo = useRef(false);
+  const scrollTimeout = useRef(null);
+
   // Active heading: the last one whose top has crossed the offset line.
   // Reading the list in order avoids the flicker you get from taking whichever
   // entry an IntersectionObserver happens to report first.
@@ -102,6 +105,8 @@ export default function TableOfContents({
 
     const update = () => {
       frame = null;
+      if (isScrollingTo.current) return;
+
       let current = headings[0].id;
 
       for (const heading of headings) {
@@ -137,12 +142,21 @@ export default function TableOfContents({
     const el = document.getElementById(id);
     if (!el) return;
 
+    isScrollingTo.current = true;
+    setActiveId(id);
+
+    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     window.scrollTo({
       top: el.getBoundingClientRect().top + window.scrollY - SCROLL_OFFSET,
       behavior: reduced ? 'auto' : 'smooth',
     });
-    setActiveId(id);
+
+    // Ignore native scroll events while smooth scrolling is happening
+    scrollTimeout.current = setTimeout(() => {
+      isScrollingTo.current = false;
+    }, 1000);
   };
 
   useEffect(() => {

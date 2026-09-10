@@ -34,3 +34,15 @@ export async function PUT(request, { params }) {
     return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
   }
 }
+
+export async function DELETE(request, { params }) {
+  try {
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
+    await mongoStore.deletePost(id);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error(`Error deleting post ${params.id}:`, error);
+    return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });
+  }
+}

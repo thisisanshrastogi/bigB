@@ -1,4 +1,5 @@
 import StudioShell from '@/studio/shell/StudioShell';
+import { auth } from '@/lib/auth';
 
 export const metadata = {
   title: 'Blog Studio | Amalgamic',
@@ -8,11 +9,11 @@ export const metadata = {
   },
 };
 
-export default function StudioLayout({ children }) {
-  // In a real app we'd have a server-side auth check here or in middleware
-  // and redirect if unauthenticated. Middleware handles it right now.
+export default async function StudioLayout({ children }) {
+  const session = await auth();
+  
   return (
-    <StudioShell>
+    <StudioShell user={session?.user}>
       {children}
     </StudioShell>
   );

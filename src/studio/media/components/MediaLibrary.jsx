@@ -20,6 +20,7 @@ export default function MediaLibrary() {
 
   const [renameDialog, setRenameDialog] = useState({ isOpen: false, key: null, name: '' });
   const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, key: null });
+  const [previewDialog, setPreviewDialog] = useState({ isOpen: false, url: '', name: '' });
 
   const fileInputRef = useRef(null);
 
@@ -139,6 +140,11 @@ export default function MediaLibrary() {
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleDownload = (url, filename) => {
+    const proxyUrl = `/api/studio/media/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}`;
+    window.open(proxyUrl, '_blank');
   };
 
   const selectedFile = images.find(f => f.key === selectedKey) || images[0];
@@ -281,6 +287,20 @@ export default function MediaLibrary() {
                   {isSelected && (
                     <div className="absolute top-2 right-2 flex gap-2">
                       <button
+                        onClick={(e) => { e.stopPropagation(); setPreviewDialog({ isOpen: true, url: file.url, name: getName(file.key) }) }}
+                        className="p-2 bg-white/90 rounded-full hover:bg-white text-ink shadow-sm transition-colors"
+                        title="Preview"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                      </button>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); handleDownload(file.url, getName(file.key)) }}
+                        className="p-2 bg-white/90 rounded-full hover:bg-white text-ink shadow-sm transition-colors"
+                        title="Download"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                      </button>
+                      <button
                         onClick={(e) => { e.stopPropagation(); setRenameDialog({ isOpen: true, key: file.key, name: getName(file.key) }) }}
                         className="p-2 bg-white/90 rounded-full hover:bg-white text-ink shadow-sm transition-colors"
                         title="Rename"
@@ -345,6 +365,26 @@ export default function MediaLibrary() {
               <button onClick={handleDelete} className="bg-warn-ink text-surface px-5 py-2 rounded-full text-[13px] font-semibold hover:bg-warn-ink/90">Delete</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {previewDialog.isOpen && (
+        <div 
+          className="fixed inset-0 bg-ink/90 z-50 flex items-center justify-center p-4 backdrop-blur-sm cursor-pointer"
+          onClick={() => setPreviewDialog({ isOpen: false, url: '', name: '' })}
+        >
+          <div className="absolute top-6 right-6">
+            <button className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img 
+            src={previewDialog.url} 
+            alt={previewDialog.name} 
+            className="max-w-[95vw] max-h-[90vh] object-contain cursor-default rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()} 
+          />
         </div>
       )}
     </div>

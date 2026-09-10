@@ -1,6 +1,8 @@
 import { mongoStore } from '@/lib/content/mongoDriver';
 import DashboardClient from '@/studio/dashboard/components/DashboardClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function StudioPostsPage() {
   let posts = [];
   try {

@@ -1,23 +1,28 @@
 import NextAuth from "next-auth"
-// In a complete implementation we'd use Nodemailer or Resend provider for magic links
-import Credentials from "next-auth/providers/credentials"
+import { authConfig } from "./auth.config"
+import { mongoStore } from "./content/mongoDriver"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  providers: [
-    Credentials({
-      name: "Developer Login",
-      credentials: {
-        email: { label: "Email", type: "email", placeholder: "lizann@amalgamic.io" }
-      },
-      async authorize(credentials) {
-        if (credentials.email === "lizann@amalgamic.io") {
-          return { id: "1", name: "Lizann", email: "lizann@amalgamic.io" }
-        }
-        return null;
+  ...authConfig,
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      // 1. Superadmin check
+      if (user.email === "lizann@amalgamic.io" || user.email === "thisisanshrastogi@gmail.com") {
+        return true;
       }
-    })
-  ],
-  pages: {
-    signIn: "/studio/login",
+
+      // 2. Whitelist check
+      try {
+        const admins = await mongoStore.getAdmins();
+        if (admins.includes(user.email)) {
+          return true;
+        }
+      } catch (err) {
+        console.error("Error checking admin whitelist:", err);
+      }
+
+      // Reject sign-in, redirect to unauthorized
+      return "/studio/unauthorized";
+    }
   }
 })

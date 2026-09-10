@@ -8,6 +8,7 @@ import NewPostDialog from '@/studio/components/NewPostDialog';
 
 export default function DashboardClient({ initialPosts = [] }) {
   const [filter, setFilter] = useState('All'); // All, Published, Draft, Scheduled
+  const [searchQuery, setSearchQuery] = useState('');
   const [showNewPostDialog, setShowNewPostDialog] = useState(false);
 
   // Calculate stats
@@ -25,8 +26,18 @@ export default function DashboardClient({ initialPosts = [] }) {
 
   // Filter posts
   const filteredPosts = initialPosts.filter(p => {
-    if (filter === 'All') return true;
-    return p.status.toLowerCase() === filter.toLowerCase();
+    // Check status filter
+    if (filter !== 'All' && p.status.toLowerCase() !== filter.toLowerCase()) {
+      return false;
+    }
+    // Check search query
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      const titleMatch = p.title && p.title.toLowerCase().includes(q);
+      const slugMatch = p.slug && p.slug.toLowerCase().includes(q);
+      if (!titleMatch && !slugMatch) return false;
+    }
+    return true;
   });
 
   return (
@@ -38,6 +49,8 @@ export default function DashboardClient({ initialPosts = [] }) {
             <input 
               type="text" 
               placeholder="Search posts" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-surface border border-border-strong rounded-[14px] py-2.5 px-5 text-sm w-64 focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft"
             />
           </div>
@@ -73,7 +86,7 @@ export default function DashboardClient({ initialPosts = [] }) {
         />
       </div>
 
-      <div className="bg-surface rounded-[22px] shadow-sm border border-border/50 overflow-hidden pb-4">
+      <div className="bg-surface rounded-[22px] shadow-sm border border-border/50 pb-4">
         <PostsTable posts={filteredPosts} />
       </div>
 

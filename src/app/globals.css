@@ -28,7 +28,7 @@
 
   --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-serif: Lora, serif;
-  
+
   /* Reduce the thickness of the default 'bold' */
   --font-weight-bold: 600;
 }
@@ -46,7 +46,8 @@ body {
   font-family: var(--font-sans);
 }
 
-b, strong {
+b,
+strong {
   font-weight: 600;
 }
 
@@ -56,29 +57,29 @@ b, strong {
 }
 
 @utility premium-shadow {
-  box-shadow: 0 12px 32px rgba(46, 43, 37, 0.18); 
+  box-shadow: 0 12px 32px rgba(46, 43, 37, 0.18);
 }
 
 @utility glass-card {
-  background: rgba(255, 255, 255, 0.6); 
-  backdrop-filter: blur(8px); 
-  border: 1px solid rgba(226, 223, 213, 0.5); 
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 223, 213, 0.5);
 }
 
 @utility chat-bubble-user {
-  border-radius: 20px 20px 4px 20px; 
+  border-radius: 20px 20px 4px 20px;
 }
 
 @utility chat-bubble-ai {
-  border-radius: 20px 20px 20px 4px; 
+  border-radius: 20px 20px 20px 4px;
 }
 
 @utility animate-subtle-float {
-  animation: subtle-float 5s ease-in-out infinite; 
+  animation: subtle-float 5s ease-in-out infinite;
 }
 
 @utility veil-overlay {
-  background: linear-gradient(100deg, rgba(245,242,234,.95) 0%, rgba(245,242,234,.8) 40%, rgba(245,242,234,0) 80%);
+  background: linear-gradient(100deg, rgba(245, 242, 234, .95) 0%, rgba(245, 242, 234, .8) 40%, rgba(245, 242, 234, 0) 80%);
 }
 
 @utility layout-compact {
@@ -112,13 +113,27 @@ b, strong {
 }
 
 @keyframes subtle-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes slide-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @utility animate-slide-in {
@@ -129,25 +144,31 @@ b, strong {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: rgba(102, 99, 88, 0.2);
   border-radius: 10px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(44, 64, 53, 0.4);
 }
+
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(102, 99, 88, 0.2) transparent;
 }
+
 @utility scrollbar-hide {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
+
   &::-webkit-scrollbar {
     display: none !important;
   }
@@ -161,27 +182,44 @@ b, strong {
   font-weight: 700;
   letter-spacing: -0.02em;
   font-size: 1.1rem;
-  color: #171613; /* brand */
+  color: #171613;
+  /* brand */
 }
+
 .logo-mark {
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 4px;
-  background: #2C4035; /* accent */
+  background: #0b0b0b;
+  /* accent */
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 }
+
 .logo-mark::after {
   content: "";
   width: 0.5rem;
   height: 0.5rem;
-  background: #ffffff; /* White center */
-  border-radius: 50%;
+  background: #ffffff;
+  /* White center */
+  border-radius: 20%;
   position: absolute;
 }
-.logo--invert { color: #F5F2EA; }
-.logo--invert .logo-mark { background: #F5F2EA; }
-.logo--invert .logo-mark::after { background: #171613; }
-.logo--mark-only { gap: 0; }
+
+.logo--invert {
+  color: #F5F2EA;
+}
+
+.logo--invert .logo-mark {
+  background: #F5F2EA;
+}
+
+.logo--invert .logo-mark::after {
+  background: #171613;
+}
+
+.logo--mark-only {
+  gap: 0;
+}

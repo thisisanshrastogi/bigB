@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command, CopyObjectCommand } from "@aws-sdk/client-s3";
 
 // Configure S3 Client
@@ -24,18 +25,27 @@ const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME || process.env.AWS_S3_BUCKET 
  * @returns {Promise<Object>} - Metadata including URL, variants, and blurhash.
  */
 export async function uploadImage(buffer, filename, mimeType) {
-  // Create a unique key for the file
+  // Process image with sharp: cap width at 1920px and convert to AVIF
+  const image = sharp(buffer);
+  const meta = await image.metadata();
+  
+  let processedImage = image;
+  if (meta.width && meta.width > 1920) {
+    processedImage = processedImage.resize(1920, null, { withoutEnlargement: true });
+  }
+  
+  const avifBuffer = await processedImage.avif({ quality: 80 }).toBuffer();
+
+  // Create a unique key for the file, forcing .avif extension
   const cleanName = filename.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const extMatch = cleanName.match(/\.[^.]+$/);
-  const ext = extMatch ? extMatch[0] : '';
-  const nameWithoutExt = ext ? cleanName.slice(0, -ext.length) : cleanName;
-  const fileKey = `amalgamic-blog/${nameWithoutExt}-${Date.now()}${ext}`;
+  const nameWithoutExt = cleanName.replace(/\.[^/.]+$/, "");
+  const fileKey = `amalgamic-blog/${nameWithoutExt}-${Date.now()}.avif`;
 
   const command = new PutObjectCommand({
     Bucket: BUCKET_NAME,
     Key: fileKey,
-    Body: buffer,
-    ContentType: mimeType,
+    Body: avifBuffer,
+    ContentType: 'image/avif',
   });
 
   await s3Client.send(command);

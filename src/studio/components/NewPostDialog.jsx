@@ -3,13 +3,20 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { createPortal } from 'react-dom';
+
 export default function NewPostDialog({ open, onClose, templateId = null, templateName = null }) {
   const router = useRouter();
   const [title, setTitle] = useState('');
   const [isCreating, setIsCreating] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef(null);
   const dialogRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Animate in
   useEffect(() => {
@@ -100,117 +107,79 @@ export default function NewPostDialog({ open, onClose, templateId = null, templa
     }
   };
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
   const slug = title.trim() ? generateSlug(title.trim()) : '';
 
-  return (
+  return createPortal(
     <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 bg-ink/50 z-[9999] flex items-center justify-center p-4 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
     >
-      {/* Backdrop */}
-      <div className={`absolute inset-0 bg-[#171613]/40 backdrop-blur-[6px] transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} />
-
-      {/* Dialog */}
       <div
         ref={dialogRef}
-        className={`relative w-full max-w-[520px] mx-4 transition-all duration-300 ease-out ${isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-4 scale-[0.97] opacity-0'}`}
+        className={`bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl transition-all duration-200 ${isVisible ? 'translate-y-0 scale-100' : 'translate-y-4 scale-95'}`}
       >
-        {/* Card */}
-        <div className="bg-[#FDFCF9] rounded-[28px] shadow-[0_24px_80px_rgba(23,22,19,0.2),0_0_1px_rgba(23,22,19,0.1)] overflow-hidden border border-[#E2DFD5]/60">
+        <h3 className="text-[18px] font-bold text-ink mb-1">
+          {templateId ? 'Name your post' : 'Create a new post'}
+        </h3>
+        
+        {templateId && templateName ? (
+          <p className="text-[13px] text-muted-soft mb-6">
+            Using the <span className="font-semibold text-ink">{templateName}</span> template
+          </p>
+        ) : (
+          <p className="text-[13px] text-muted-soft mb-6">
+            Give your new post a title to get started.
+          </p>
+        )}
 
-          {/* Top accent strip */}
-          <div className="h-[3px] bg-[#2C4035]" />
-
-          {/* Header */}
-          <div className="px-8 pt-8 pb-2 flex items-start justify-between">
-            <div>
-              <h2 className="text-[22px] font-serif text-[#171613] tracking-tight leading-tight">
-                {templateId ? 'Name your post' : 'Create a new post'}
-              </h2>
-              {templateId && templateName && (
-                <div className="flex items-center gap-2 mt-2.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#8DC4AC]" />
-                  <span className="text-[13px] text-[#8A8375] font-medium">
-                    Using <span className="text-[#2C4035] font-semibold">{templateName}</span> template
-                  </span>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full hover:bg-[#EFEBE1] flex items-center justify-center text-[#8A8375] hover:text-[#171613] transition-colors -mr-1 -mt-1"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Body */}
-          <div className="px-8 pt-4 pb-2">
-            {/* Title Input */}
-            <div className="mb-1">
-              <label className="block text-[11px] font-bold text-[#8A8375] uppercase tracking-[0.08em] mb-2.5">
-                Post title
-              </label>
-              <input
-                ref={inputRef}
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="e.g. How to maximise your credit card rewards"
-                className="w-full px-4 py-3.5 text-[16px] text-[#171613] bg-white border border-[#D6CFBF] rounded-2xl focus:outline-none focus:border-[#2C4035] focus:ring-2 focus:ring-[#2C4035]/10 transition-all placeholder:text-[#C4BFB0] font-serif"
-                autoComplete="off"
-                disabled={isCreating}
-              />
-            </div>
-
-            {/* Live slug preview */}
-            <div className={`mt-3 flex items-center gap-1.5 transition-all duration-200 ${slug ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>
-              <svg className="w-3 h-3 text-[#8DC4AC] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-              <span className="text-[12px] text-[#8A8375] font-mono truncate">
-                /blog/<span className="text-[#2C4035] font-medium">{slug}</span>
+        <div className="mb-6">
+          <input
+            ref={inputRef}
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Post title"
+            className="w-full px-4 py-2.5 text-[14px] text-ink bg-surface border border-border-strong rounded-xl focus:outline-none focus:border-ink transition-colors placeholder:text-muted-soft"
+            autoComplete="off"
+            disabled={isCreating}
+          />
+          <div className="mt-2 flex items-center gap-1.5 min-h-[16px]">
+            {slug && (
+              <span className="text-[12px] text-muted-soft font-mono truncate">
+                /blog/<span className="text-ink font-medium">{slug}</span>
               </span>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="px-8 pt-5 pb-7 flex items-center justify-between">
-            <button
-              onClick={onClose}
-              disabled={isCreating}
-              className="px-5 py-2.5 rounded-full text-[14px] font-semibold text-[#6B6658] hover:text-[#171613] hover:bg-[#EFEBE1] transition-colors disabled:opacity-50"
-            >
-              Cancel
-            </button>
-
-            <button
-              onClick={handleCreate}
-              disabled={isCreating}
-              className="group relative bg-[#171613] text-[#F5F2EA] px-7 py-2.5 rounded-full text-[14px] font-semibold hover:bg-[#2C4035] transition-all duration-200 flex items-center gap-2.5 disabled:opacity-60 shadow-[0_2px_8px_rgba(23,22,19,0.15)] hover:shadow-[0_4px_16px_rgba(44,64,53,0.25)]"
-            >
-              {isCreating ? (
-                <>
-                  <span className="w-4 h-4 rounded-full border-2 border-[#F5F2EA]/30 border-t-[#F5F2EA] animate-spin" />
-                  Creating…
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4 transition-transform group-hover:rotate-90 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  {templateId ? 'Create post' : 'Create draft'}
-                </>
-              )}
-            </button>
+            )}
           </div>
         </div>
+
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={onClose}
+            disabled={isCreating}
+            className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreate}
+            disabled={isCreating}
+            className="px-5 py-2 rounded-full text-[13px] font-semibold text-surface bg-ink hover:bg-ink/90 flex items-center gap-2 disabled:opacity-50"
+          >
+            {isCreating ? (
+              <>
+                <span className="w-3.5 h-3.5 rounded-full border-2 border-surface/30 border-t-surface animate-spin" />
+                Creating...
+              </>
+            ) : (
+              templateId ? 'Create from Template' : 'Create Post'
+            )}
+          </button>
+        </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

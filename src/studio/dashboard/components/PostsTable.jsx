@@ -1,7 +1,59 @@
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createPortal } from 'react-dom';
 import StatusPill from './StatusPill';
 
 export default function PostsTable({ posts = [] }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [actionDialog, setActionDialog] = useState({ isOpen: false, type: null, post: null });
+  const router = useRouter();
+
+  const handlePreview = async (post) => {
+    setOpenDropdownId(null);
+    if (post.status === 'published') {
+      window.open(`/blog/${post.slug}`, '_blank');
+    } else {
+      try {
+        const res = await fetch('/api/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ postId: post.id })
+        });
+        const { token } = await res.json();
+        window.open(`/blog/${post.slug || 'untitled'}?preview=${token}`, '_blank');
+      } catch (e) {
+        console.error('Failed to generate preview', e);
+      }
+    }
+  };
+
+  const confirmAction = async () => {
+    if (!actionDialog.post) return;
+    const { type, post } = actionDialog;
+    
+    try {
+      if (type === 'unpublish') {
+        await fetch(`/api/studio/posts/${post.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'draft' })
+        });
+      } else if (type === 'delete') {
+        await fetch(`/api/studio/posts/${post.id}`, {
+          method: 'DELETE'
+        });
+      }
+      setActionDialog({ isOpen: false, type: null, post: null });
+      router.refresh();
+    } catch (e) {
+      console.error(`Failed to ${type} post`, e);
+    }
+  };
+
   if (posts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center px-6">
@@ -19,6 +71,7 @@ export default function PostsTable({ posts = [] }) {
   }
 
   return (
+    <>
     <table className="w-full text-left border-collapse">
       <thead>
         <tr className="border-b border-border/50 text-[11px] uppercase tracking-[0.06em] text-muted-soft font-bold">
@@ -56,23 +109,72 @@ export default function PostsTable({ posts = [] }) {
             <td className="px-6 py-4">
               <StatusPill status={post.status} />
             </td>
-            <td className="px-6 py-4 text-[13px] text-muted-soft">
+            <td className="px-6 py-4 text-[13px] text-muted-soft" suppressHydrationWarning>
               {post.updatedAt ? new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(post.updatedAt)) : 'Edited today'}
             </td>
             <td className="px-6 py-4 text-[14px] font-bold text-ink">
               {post.views ? post.views.toLocaleString() : '—'}
             </td>
-            <td className="px-6 py-4 text-right">
+            <td className="px-6 py-4 text-right relative">
               <button 
+                onClick={(e) => { e.stopPropagation(); setOpenDropdownId(openDropdownId === post.id ? null : post.id); }}
                 className="text-muted-soft hover:text-ink px-2 py-1 transition-colors tracking-widest text-lg font-serif"
                 title="Options"
               >
                 ...
               </button>
+              {openDropdownId === post.id && (
+                <div 
+                  className="absolute right-6 top-10 bg-surface border border-border-strong rounded-xl shadow-lg w-32 z-10 overflow-hidden flex flex-col py-1 animate-slide-in-up origin-top-right"
+                  onMouseLeave={() => setOpenDropdownId(null)}
+                >
+                  {post.status === 'published' ? (
+                    <>
+                      <button onClick={(e) => { e.stopPropagation(); handlePreview(post); }} className="text-left px-4 py-2 text-[13px] font-semibold text-ink hover:bg-surface-sunken transition-colors">Preview</button>
+                      <button onClick={(e) => { e.stopPropagation(); setOpenDropdownId(null); setActionDialog({ isOpen: true, type: 'unpublish', post }); }} className="text-left px-4 py-2 text-[13px] font-semibold text-ink hover:bg-surface-sunken transition-colors">Unpublish</button>
+                    </>
+                  ) : (
+                    <>
+                      <button onClick={(e) => { e.stopPropagation(); handlePreview(post); }} className="text-left px-4 py-2 text-[13px] font-semibold text-ink hover:bg-surface-sunken transition-colors">Preview</button>
+                      <button onClick={(e) => { e.stopPropagation(); setOpenDropdownId(null); setActionDialog({ isOpen: true, type: 'delete', post }); }} className="text-left px-4 py-2 text-[13px] font-semibold text-warn-ink hover:bg-surface-sunken transition-colors">Delete</button>
+                    </>
+                  )}
+                </div>
+              )}
             </td>
           </tr>
         ))}
       </tbody>
     </table>
+      {actionDialog.isOpen && mounted && createPortal(
+        <div className="fixed inset-0 bg-ink/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-surface rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 className="text-[18px] font-bold text-ink mb-2">
+              {actionDialog.type === 'unpublish' ? 'Unpublish Post' : 'Delete Post'}
+            </h3>
+            <p className="text-[14px] text-muted-soft mb-6">
+              {actionDialog.type === 'unpublish' 
+                ? 'Are you sure you want to unpublish this post? It will be moved to drafts and hidden from the public blog.' 
+                : 'Are you sure you want to permanently delete this post? This action cannot be undone.'}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button 
+                onClick={() => setActionDialog({ isOpen: false, type: null, post: null })} 
+                className="px-5 py-2 rounded-full border border-border-strong text-[13px] font-semibold text-ink hover:bg-surface-sunken"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmAction} 
+                className={`px-5 py-2 rounded-full text-[13px] font-semibold text-surface ${actionDialog.type === 'delete' ? 'bg-warn-ink hover:bg-warn-ink/90' : 'bg-ink hover:bg-ink/90'}`}
+              >
+                {actionDialog.type === 'unpublish' ? 'Unpublish' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
