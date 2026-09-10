@@ -158,9 +158,9 @@ export default function Navbar() {
     <div ref={root}>
       <div className="nav-wrapper opacity-0 fixed left-1/2 -translate-x-1/2 w-[90%] max-w-[1300px] z-50" style={{ top: '-80px' }}>
         <nav className="bg-white px-5 py-3 md:px-8 md:py-4 rounded-full shadow-lg border border-black/5 flex items-center justify-between transition-shadow">
-          <Link href="/" className="nav-logo opacity-0 hover:opacity-80 transition-opacity">
+          <a href="https://amalgamic.io/" className="nav-logo opacity-0 hover:opacity-80 transition-opacity">
             <Logo />
-          </Link>
+          </a>
 
           <div className="hidden md:flex items-center gap-10 text-[15px] font-bold text-muted tracking-wide">
 
@@ -183,49 +183,46 @@ export default function Navbar() {
                 style={{ visibility: 'hidden', display: 'none', transformOrigin: 'top center' }}
               >
 
-                <Link
-                  href="/#assistant"
-                  onClick={(e) => handleNavClick(e, 'assistant')}
+                <a
+                  href="https://amalgamic.io/#assistant"
                   className="flex flex-col px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
                 >
                   <span className="text-[13px] font-bold text-ink">Assistant</span>
                   <span className="text-[11px] text-muted mt-0.5 font-normal">Chat with your statements</span>
-                </Link>
-                <Link
-                  href="/#subscriptions"
-                  onClick={(e) => handleNavClick(e, 'subscriptions')}
+                </a>
+                <a
+                  href="https://amalgamic.io/#subscriptions"
                   className="flex flex-col px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
                 >
                   <span className="text-[13px] font-bold text-ink">Subscriptions</span>
                   <span className="text-[11px] text-muted mt-0.5 font-normal">Manage recurring charges</span>
-                </Link>
-                <Link
-                  href="/#how-it-works"
-                  onClick={(e) => handleNavClick(e, 'how-it-works')}
+                </a>
+                <a
+                  href="https://amalgamic.io/#how-it-works"
                   className="flex flex-col px-4 py-3 rounded-xl hover:bg-black/5 transition-colors"
                 >
                   <span className="text-[13px] font-bold text-ink">How it works</span>
                   <span className="text-[11px] text-muted mt-0.5 font-normal">Connect cards, automate claims</span>
-                </Link>
+                </a>
               </div>
             </div>
 
-            <Link href="/about"
+            <a href="https://amalgamic.io/about"
                className={`nav-link opacity-0 relative px-2 py-2 transition-all duration-300 flex flex-col items-center group ${pathname === '/about' ? 'text-ink font-bold' : 'hover:text-ink'}`}
             >
               About
               <span className={`absolute -bottom-1 w-1 h-1 rounded-full bg-ink transition-all duration-300 ${pathname === '/about' ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'}`} />
-            </Link>
-            <Link href="/faq"
+            </a>
+            <a href="https://amalgamic.io/faq"
                className={`nav-link opacity-0 relative px-2 py-2 transition-all duration-300 flex flex-col items-center group ${pathname === '/faq' ? 'text-ink font-bold' : 'hover:text-ink'}`}
             >
               FAQ
               <span className={`absolute -bottom-1 w-1 h-1 rounded-full bg-ink transition-all duration-300 ${pathname === '/faq' ? 'scale-100 opacity-100' : 'scale-0 opacity-0 group-hover:scale-100 group-hover:opacity-100'}`} />
-            </Link>
+            </a>
           </div>
 
           <div className="nav-cta opacity-0 flex items-center gap-4 md:gap-6">
-            <Link href="/contact" className="text-[15px] font-bold text-ink hover:opacity-70 transition-opacity hidden sm:block">Contact</Link>
+            <a href="https://amalgamic.io/contact" className="text-[15px] font-bold text-ink hover:opacity-70 transition-opacity hidden sm:block">Contact</a>
             <a href="https://cards.amalgamic.io/auth/signin" className="bg-ink text-white px-5 py-2 md:px-6 md:py-2.5 rounded-full text-[15px] font-bold hover:opacity-80 transition-opacity shadow-sm inline-block text-center">
               Get Started
             </a>
