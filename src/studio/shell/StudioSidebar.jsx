@@ -40,10 +40,10 @@ export default function StudioSidebar({ user }) {
 
   return (
     <>
-      <div className="w-[240px] bg-surface-sunken border-r border-border/50 h-[100dvh] flex flex-col p-4 shrink-0">
+      <div className="w-[220px] bg-surface border-r border-border/50 h-[100dvh] flex flex-col p-4 shrink-0">
         <div className="mb-8 px-2 pt-2 flex items-center gap-3">
-          <div className="logo-mark shrink-0 scale-100 shadow-sm" />
-          <h2 className="text-lg font-bold tracking-tight text-ink">BigB Studio</h2>
+          <div className="logo-mark shrink-0 scale-90" />
+          <h2 className="text-[14px] font-bold tracking-wide text-ink uppercase">BigB Studio</h2>
         </div>
 
         <nav className="flex-1 space-y-1">
@@ -56,12 +56,12 @@ export default function StudioSidebar({ user }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-all text-[13px] ${isActive
-                  ? 'bg-surface shadow-sm border border-border/50 text-ink font-semibold'
-                  : 'text-muted-soft font-medium hover:bg-black/5 hover:text-ink border border-transparent'
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all text-[13px] ${isActive
+                  ? 'bg-surface-sunken text-ink font-semibold'
+                  : 'text-muted-soft font-medium hover:bg-black/5 hover:text-ink'
                   }`}
               >
-                <item.Icon size={16} strokeWidth={isActive ? 2.5 : 2} className="shrink-0" />
+                <item.Icon size={16} strokeWidth={isActive ? 2 : 1.5} className="shrink-0" />
                 {item.label}
               </Link>
             );
@@ -71,24 +71,24 @@ export default function StudioSidebar({ user }) {
         <div className="mt-auto">
           <button 
             onClick={() => setShowSignOutDialog(true)}
-            className="w-full flex items-center gap-3 p-2 rounded-md hover:bg-black/5 transition-colors text-left border border-transparent hover:border-border/30 shadow-sm hover:shadow-none"
+            className="w-full flex items-center gap-3 p-2 rounded-md hover:bg-surface-sunken transition-colors text-left group"
           >
             {user?.image ? (
-              <img src={user.image} alt={user.name || "User"} className="w-8 h-8 rounded-full shrink-0" />
+              <img src={user.image} alt={user.name || "User"} className="w-7 h-7 rounded-full shrink-0" />
             ) : (
-              <div className="w-8 h-8 rounded-full bg-accent text-surface flex items-center justify-center font-bold text-[12px] shrink-0">
+              <div className="w-7 h-7 rounded-full bg-accent text-surface flex items-center justify-center font-bold text-[11px] shrink-0">
                 {(user?.name || user?.email || 'U')[0].toUpperCase()}
               </div>
             )}
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-[13px] font-semibold text-ink truncate leading-tight">
-                {user?.name || 'Admin User'}
+                {user?.name || 'Admin'}
               </span>
               <span className="text-[11px] text-muted-soft truncate mt-0.5">
                 {user?.email || 'admin@amalgamic.io'}
               </span>
             </div>
-            <LogOut size={14} className="text-muted-soft shrink-0" />
+            <LogOut size={14} strokeWidth={1.5} className="text-muted-soft shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
         </div>
       </div>

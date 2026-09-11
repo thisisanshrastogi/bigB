@@ -57,8 +57,6 @@ export default function BlockPalette() {
   const { post, updatePost, selectedBlockId, setSelectedBlockId } = useEditor();
   const [isOutlineExpanded, setIsOutlineExpanded] = useState(false);
 
-  if (post.mode !== 'custom') return null;
-
   const blocks = post.blocks || [];
   const PALETTE_BLOCK_TYPES = Object.keys(blockRegistry);
 

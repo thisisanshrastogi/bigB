@@ -89,69 +89,59 @@ export async function listImages(continuationToken = null, searchPrefix = null) 
     ? `https://${process.env.NEXT_PUBLIC_IMAGE_DOMAIN}` 
     : `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com`;
 
-  if (searchPrefix) {
-    const searchLower = searchPrefix.toLowerCase();
-    let allMatches = [];
-    let isTruncated = true;
-    let token = null; // Search always starts from beginning
+  let allMatches = [];
+  let isTruncated = true;
+  let token = null; // Always fetch from beginning to sort in memory
+  
+  while (isTruncated) {
+    const command = new ListObjectsV2Command({
+      Bucket: BUCKET_NAME,
+      Prefix: 'amalgamic-blog/',
+      ...(token && { ContinuationToken: token })
+    });
+    const response = await s3Client.send(command);
     
-    while (isTruncated) {
-      const command = new ListObjectsV2Command({
-        Bucket: BUCKET_NAME,
-        Prefix: 'amalgamic-blog/',
-        ...(token && { ContinuationToken: token })
-      });
-      const response = await s3Client.send(command);
-      
-      if (response.Contents) {
-        const matches = response.Contents.filter(item => {
+    if (response.Contents) {
+      let matches = response.Contents;
+      if (searchPrefix) {
+        const searchLower = searchPrefix.toLowerCase();
+        matches = matches.filter(item => {
            const filename = item.Key.split('/').pop().toLowerCase();
            return filename.includes(searchLower);
         });
-        
-        const mapped = matches.map(item => ({
-          url: `${baseUrl}/${item.Key}`,
-          key: item.Key,
-          lastModified: item.LastModified,
-          size: item.Size
-        }));
-        allMatches = [...allMatches, ...mapped];
       }
-      isTruncated = response.IsTruncated;
-      token = response.NextContinuationToken;
+      
+      const mapped = matches.map(item => ({
+        url: `${baseUrl}/${item.Key}`,
+        key: item.Key,
+        lastModified: item.LastModified,
+        size: item.Size
+      }));
+      allMatches = [...allMatches, ...mapped];
     }
-    
-    allMatches.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+    isTruncated = response.IsTruncated;
+    token = response.NextContinuationToken;
+  }
+  
+  // Sort chronologically (newest first)
+  allMatches.sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+
+  if (searchPrefix) {
     return {
       images: allMatches,
       nextContinuationToken: null // return all search results at once
     };
   }
 
-  // Normal paginated fetch
-  const command = new ListObjectsV2Command({
-    Bucket: BUCKET_NAME,
-    Prefix: 'amalgamic-blog/',
-    MaxKeys: 30,
-    ...(continuationToken && { ContinuationToken: continuationToken })
-  });
-
-  const response = await s3Client.send(command);
-  
-  if (!response.Contents) {
-    return { images: [], nextContinuationToken: null };
-  }
-  
-  const images = response.Contents.map(item => ({
-    url: `${baseUrl}/${item.Key}`,
-    key: item.Key,
-    lastModified: item.LastModified,
-    size: item.Size
-  })).sort((a, b) => new Date(b.lastModified) - new Date(a.lastModified));
+  // Manual pagination for normal fetch
+  const limit = 30;
+  const offset = parseInt(continuationToken, 10) || 0;
+  const paginatedImages = allMatches.slice(offset, offset + limit);
+  const nextOffset = offset + limit < allMatches.length ? (offset + limit).toString() : null;
 
   return {
-    images,
-    nextContinuationToken: response.NextContinuationToken || null
+    images: paginatedImages,
+    nextContinuationToken: nextOffset
   };
 }
 

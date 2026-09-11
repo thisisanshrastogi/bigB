@@ -10,12 +10,12 @@ export default function FilterChips({ active, onChange, counts = {} }) {
             onClick={() => onChange(chip === 'Drafts' ? 'Draft' : chip)}
             className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-all flex items-center gap-2 ${
               (active === chip || (active === 'Draft' && chip === 'Drafts'))
-                ? 'bg-ink text-surface shadow-sm' 
+                ? 'bg-accent text-surface shadow-sm' 
                 : 'bg-surface border border-border text-muted hover:text-ink hover:bg-surface-sunken hover:border-border-strong'
             }`}
           >
             {chip} {counts[chip] !== undefined && <span className={`text-[11px] px-1.5 py-0.5 rounded-full ${
-              (active === chip || (active === 'Draft' && chip === 'Drafts')) ? 'bg-surface/20' : 'bg-surface-sunken text-muted'
+              (active === chip || (active === 'Draft' && chip === 'Drafts')) ? 'bg-surface/20 text-surface' : 'bg-surface-sunken text-muted'
             }`}>{counts[chip]}</span>}
           </button>
         ))}

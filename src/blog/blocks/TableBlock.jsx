@@ -57,11 +57,11 @@ export default function TableBlock({ data, editing }) {
                 : "border-b border-border last:border-0";
                 
               return (
-                <tr key={rowIndex} className={`${trMobileClass} group hover:bg-accent/5 transition-colors ${zebraClass}`}>
+                <tr key={rowIndex} className={`${trMobileClass} group ${zebraClass}`}>
                   {columns.map((col, colIndex) => {
                     const cellData = rowCells[colIndex]?.text || '';
                     const alignClass = `text-${col.align || 'left'}`;
-                    const stickyClass = (firstColSticky && colIndex === 0 && !isStackedMobile) ? `sticky left-0 z-10 ${zebraClass} group-hover:bg-accent/5` : "";
+                    const stickyClass = (firstColSticky && colIndex === 0 && !isStackedMobile) ? `sticky left-0 z-10 ${zebraClass}` : "";
                     
                     const isNumeric = /^[\d\.\,\$\€\£\%\+\-\s]+$/.test(cellData);
                     const tabularClass = isNumeric ? 'tabular-nums' : '';
