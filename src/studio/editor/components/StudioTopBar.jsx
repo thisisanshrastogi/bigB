@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useEditor } from '@/studio/EditorProvider';
 import DeviceSwitch from './DeviceSwitch';
 import AIGeneratorModal from './AIGeneratorModal';
-import { Home } from 'lucide-react';
+import { Home, Fan } from 'lucide-react';
 
 export default function StudioTopBar() {
   const { post, viewMode, setViewMode, device, setDevice, viewAs, setViewAs, zoomScale, updateZoom } = useEditor();
@@ -130,9 +130,7 @@ export default function StudioTopBar() {
             onClick={() => setIsAIModalOpen(true)}
             className="flex items-center justify-center gap-2 bg-ink text-surface w-[140px] py-2 rounded-full text-[14px] font-bold hover:bg-ink/90 transition-all active:scale-[0.98]"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
+            <Fan className="w-4 h-4" />
             AI Generate
           </button>
         )}

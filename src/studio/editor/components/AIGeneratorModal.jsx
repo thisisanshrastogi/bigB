@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useEditor } from '@/studio/EditorProvider';
+import { X, Fan, Type, CodeXml } from 'lucide-react';
 
 // A simple syntax highlighter for JSON
 const highlightJson = (jsonStr) => {
@@ -36,7 +37,7 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState(null);
   const [mounted, setMounted] = useState(false);
-  
+
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -55,13 +56,13 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: contentInput })
       });
-      
+
       const data = await res.json();
-      
+
       if (!res.ok) {
         throw new Error(data.error || 'Failed to generate');
       }
-      
+
       setJsonInput(JSON.stringify(data, null, 2));
       setMode('json');
     } catch (err) {
@@ -75,7 +76,7 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
     try {
       setError(null);
       const parsed = JSON.parse(jsonInput);
-      
+
       // Helper to ensure all blocks have an ID (dnd-kit requires this)
       const ensureIds = (blocksArray) => {
         return blocksArray.map(b => ({
@@ -83,7 +84,7 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
           id: b.id || Math.random().toString(36).substring(2, 9)
         }));
       };
-      
+
       if (Array.isArray(parsed)) {
         updatePost({ blocks: ensureIds(parsed) });
       } else if (typeof parsed === 'object' && parsed !== null) {
@@ -119,60 +120,77 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl flex flex-col h-[85vh] overflow-hidden relative z-[1000]">
-        
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-ink/30 backdrop-blur-sm animate-in fade-in duration-300"
+        onClick={onClose}
+      />
+
+      {/* Modal Container */}
+      <div className="w-full max-w-4xl bg-surface rounded-[24px] shadow-2xl flex flex-col h-[85vh] overflow-hidden relative z-[1000] animate-in zoom-in-95 fade-in duration-300 premium-shadow border border-rule/50">
+
         {/* Header */}
-        <div className="p-6 border-b border-rule flex justify-between items-center shrink-0 bg-[#F5F2EA]">
-          <div className="flex gap-4 items-center">
-            <h2 className="text-xl font-serif font-bold text-ink">AI Generator</h2>
-            <div className="flex bg-[#E0DACB] p-1 rounded-full">
-              <button 
+        <div className="px-8 py-5 flex justify-between items-center shrink-0 bg-surface border-b border-rule/50">
+          <div className="flex gap-8 items-center">
+            <div className="flex items-center gap-2">
+              <Fan className="w-6 h-6" />
+
+              <h2 className="text-xl  font-semibold text-ink">AI Generator</h2>
+            </div>
+
+            {/* Segmented Control */}
+            <div className="flex bg-surface-sunken p-1 rounded-full border border-rule/30">
+              <button
                 onClick={() => setMode('generate')}
-                className={`px-4 py-1.5 text-[13px] font-bold rounded-full transition-colors ${mode === 'generate' ? 'bg-white text-ink shadow-sm' : 'text-muted hover:text-ink'}`}
+                className={`flex items-center gap-2 px-5 py-1.5 text-[13px] font-bold rounded-full transition-all duration-200 active:scale-[0.98] ${mode === 'generate' ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink hover:bg-surface/50'}`}
               >
-                1. Write Content
+                <Type className="w-3.5 h-3.5" />
+                Content
               </button>
-              <button 
+              <button
                 onClick={() => setMode('json')}
-                className={`px-4 py-1.5 text-[13px] font-bold rounded-full transition-colors ${mode === 'json' ? 'bg-white text-ink shadow-sm' : 'text-muted hover:text-ink'}`}
+                className={`flex items-center gap-2 px-5 py-1.5 text-[13px] font-bold rounded-full transition-all duration-200 active:scale-[0.98] ${mode === 'json' ? 'bg-surface text-ink shadow-sm' : 'text-muted hover:text-ink hover:bg-surface/50'}`}
               >
-                2. Edit JSON
+                <CodeXml className="w-3.5 h-3.5" />
+                JSON
               </button>
             </div>
           </div>
-          <button onClick={onClose} className="text-muted hover:text-ink transition-colors p-2">
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:bg-surface-sunken hover:text-ink transition-colors active:scale-[0.95]"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
-        
+
         {/* Body */}
-        <div className="p-6 flex-1 flex flex-col gap-4 overflow-hidden">
+        <div className="p-8 flex-1 flex flex-col gap-6 overflow-hidden bg-bg">
           {error && (
-            <div className="text-red-600 text-[13px] font-medium bg-red-50 p-3 rounded-lg border border-red-100 shrink-0">
+            <div className="text-warn-ink text-[13px] font-medium bg-warn-bg px-4 py-3 rounded-xl border border-warn-ink/20 shrink-0 flex items-center gap-3">
+              <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
               {error}
             </div>
           )}
 
           {mode === 'generate' ? (
-            <div className="flex flex-col flex-1 gap-2">
-              <label className="text-[13px] font-bold text-ink uppercase tracking-wider">Source Content</label>
+            <div className="flex flex-col flex-1 gap-3">
+              <label className="text-[11px] font-bold text-muted uppercase tracking-widest pl-1">Source Content</label>
               <textarea
-                className="w-full flex-1 font-sans text-[15px] p-5 bg-[#F9F8F6] border border-rule rounded-xl outline-none focus:border-forest focus:ring-1 focus:ring-forest resize-none leading-relaxed"
-                placeholder="Paste your rough draft, bullet points, or markdown here. We'll turn it into beautiful blocks..."
+                className="w-full flex-1 font-sans text-[15px] p-6 bg-surface border border-rule/60 rounded-2xl outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 resize-none leading-relaxed shadow-sm transition-all text-ink placeholder:text-muted-soft"
+                placeholder="Paste your rough draft, bullet points, or markdown here. We'll structure it into beautiful blocks..."
                 value={contentInput}
                 onChange={(e) => setContentInput(e.target.value)}
               />
             </div>
           ) : (
-            <div className="flex flex-col flex-1 gap-2 overflow-hidden relative">
-              <label className="text-[13px] font-bold text-ink uppercase tracking-wider shrink-0">Generated JSON</label>
-              
-              <div className="relative flex-1 rounded-xl border border-rule bg-[#F9F8F6] overflow-hidden">
+            <div className="flex flex-col flex-1 gap-3 overflow-hidden relative">
+              <label className="text-[11px] font-bold text-muted uppercase tracking-widest pl-1 shrink-0">Generated JSON</label>
+              <div className="relative flex-1 rounded-2xl border border-rule/60 bg-surface shadow-sm overflow-hidden focus-within:border-forest/50 focus-within:ring-4 focus-within:ring-forest/10 transition-all">
                 <textarea
-                  className="w-full h-full p-5 font-mono text-[13px] leading-[1.6] bg-transparent text-[#2c4035] outline-none resize-none whitespace-pre-wrap break-words"
+                  className="w-full h-full p-6 font-mono text-[13px] leading-[1.6] bg-transparent text-ink/80 outline-none resize-none whitespace-pre-wrap break-words"
                   value={jsonInput}
                   onChange={(e) => setJsonInput(e.target.value)}
                   spellCheck="false"
@@ -181,45 +199,43 @@ export default function AIGeneratorModal({ isOpen, onClose }) {
             </div>
           )}
         </div>
-        
+
         {/* Footer */}
-        <div className="p-5 border-t border-rule flex justify-between items-center shrink-0 bg-[#F5F2EA]">
+        <div className="px-8 py-5 border-t border-rule/50 flex justify-between items-center shrink-0 bg-surface">
           {isGenerating ? (
-            <div className="flex items-center gap-3 text-forest font-bold text-[14px]">
-              <svg className="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Generating blocks...
+            <div className="flex items-center gap-3 text-forest font-bold text-[13px]">
+              <Fan className="animate-spin w-4 h-4 text-forest" />
+              Generating structure...
             </div>
           ) : (
             <div className="text-[13px] text-muted">
-              {mode === 'generate' ? 'Uses gemini-3.6-flash' : 'Feel free to tweak the JSON before painting.'}
+              {mode === 'generate' ? 'Uses gemini-3.8-flash' : 'Feel free to tweak the JSON before painting.'}
             </div>
           )}
 
           <div className="flex gap-3">
-            <button 
+            <button
               onClick={onClose}
-              className="px-5 py-2.5 rounded-full text-ink font-semibold hover:bg-[#E0DACB] transition-colors"
+              className="px-6 py-2.5 rounded-full text-muted font-bold hover:text-ink hover:bg-surface-sunken transition-all active:scale-[0.98] text-[13px]"
             >
               Cancel
             </button>
-            
+
             {mode === 'generate' ? (
-              <button 
+              <button
                 onClick={handleGenerate}
                 disabled={isGenerating || !contentInput.trim()}
-                className="px-6 py-2.5 rounded-full bg-forest text-white font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                className="px-8 py-2.5 rounded-full bg-forest text-white font-bold hover:bg-ink transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm text-[13px] flex items-center gap-2"
               >
+                <Fan className="w-4 h-4" />
                 Generate JSON
               </button>
             ) : (
-              <button 
+              <button
                 onClick={handleImport}
-                className="px-6 py-2.5 rounded-full bg-forest text-white font-bold hover:opacity-90 transition-opacity shadow-sm"
+                className="px-8 py-2.5 rounded-full bg-forest text-white font-bold hover:bg-ink transition-all active:scale-[0.98] shadow-sm text-[13px]"
               >
-                Paint Editor
+                Paint to Canvas
               </button>
             )}
           </div>

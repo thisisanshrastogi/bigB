@@ -24,12 +24,18 @@ export default function GalleryBlock({ data, editing }) {
 
   const renderImage = (img, index, isCarousel = false) => (
     <figure key={index} className={`flex flex-col m-0 ${isCarousel ? 'snap-center shrink-0 w-[74%]' : ''}`}>
-      <img
-        src={img.src}
-        alt={img.alt}
-        className="w-full h-full object-cover rounded-[20px]"
-        style={{ filter: 'saturate(0.78) contrast(0.95)' }}
-      />
+      {img.src ? (
+        <img
+          src={img.src}
+          alt={img.alt}
+          className="w-full h-full object-cover rounded-[20px]"
+          style={{ filter: 'saturate(0.78) contrast(0.95)' }}
+        />
+      ) : (
+        <div className="w-full h-full min-h-[150px] bg-border/20 rounded-[20px] flex items-center justify-center text-muted/50 text-[12px]">
+          No Image
+        </div>
+      )}
       {captionMode === 'per-item' && img.caption && (
         <figcaption className="font-sans text-[13px] leading-[1.5] text-muted mt-[10px] text-center">
           {img.caption}

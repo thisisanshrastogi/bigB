@@ -56,6 +56,15 @@ export default function BlockCanvas({ localBlocks }) {
     });
   };
 
+  const convertBlock = (id, newType, newData) => {
+    updatePost({
+      blocks: blocks.map(b => {
+        if (b.id !== id) return b;
+        return { ...b, type: newType, data: newData };
+      })
+    });
+  };
+
   const moveBlock = (id, direction) => {
     const index = blocks.findIndex(b => b.id === id);
     if (direction === 'up' && index > 0) {
@@ -150,6 +159,7 @@ export default function BlockCanvas({ localBlocks }) {
                   onRemove={() => removeBlock(block.id)}
                   onDuplicate={() => duplicateBlock(block.id)}
                   onChangeType={(newType) => changeBlockType(block.id, newType)}
+                  onConvert={(newType, newData) => convertBlock(block.id, newType, newData)}
                   onMoveUp={() => moveBlock(block.id, 'up')}
                   onMoveDown={() => moveBlock(block.id, 'down')}
                   onInsertAfter={(type, data) => insertBlockAfter(block.id, type, data)}
