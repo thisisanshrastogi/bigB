@@ -256,6 +256,7 @@ export const blockRegistry = {
     editor: [
       { key: 'variant', type: 'select', options: [
         {label: 'Info', value: 'info'},
+        {label: 'Mint', value: 'mint'},
         {label: 'Warn', value: 'warn'},
         {label: 'Success', value: 'success'},
         {label: 'Stat', value: 'stat'},
@@ -280,7 +281,7 @@ export const blockRegistry = {
     icon: 'M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122',
     defaultData: { heading: '', body: '', buttonLabel: 'Click Here', href: '', theme: 'ink', layout: 'row' },
     editor: [
-      { key: 'theme', type: 'select', options: [{label: 'Ink', value: 'ink'}, {label: 'Mint', value: 'mint'}, {label: 'Forest', value: 'forest'}, {label: 'Outline', value: 'outline'}], label: 'Theme' },
+      { key: 'theme', type: 'select', options: [{label: 'Ink', value: 'ink'}, {label: 'Mint', value: 'mint'}, {label: 'Forest', value: 'forest'}, {label: 'Outline', value: 'outline'}, {label: 'Sunken', value: 'sunken'}], label: 'Theme' },
       { key: 'layout', type: 'toggleGroup', options: [{label: 'Row', value: 'row'}, {label: 'Stacked', value: 'stacked'}], label: 'Layout' },
       { key: 'heading', type: 'text', label: 'Heading' },
       { key: 'body', type: 'textarea', label: 'Body Text' },
@@ -385,7 +386,8 @@ export const blockRegistry = {
         {label: 'Mint', value: 'mint'}, 
         {label: 'Ink', value: 'ink'},
         {label: 'Paper', value: 'paper'},
-        {label: 'Forest', value: 'forest'}
+        {label: 'Forest', value: 'forest'},
+        {label: 'Sunken', value: 'sunken'}
       ], label: 'Theme' },
       { key: 'layout', type: 'toggleGroup', options: [{label: 'Centered', value: 'center'}, {label: 'Split', value: 'split'}], label: 'Layout' }
     ],

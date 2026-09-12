@@ -123,7 +123,7 @@ export default function BlockPalette() {
 
       {/* Expandable Outline Drawer */}
       <div
-        className={`absolute bottom-0 left-0 right-0 bg-paper border-t border-border flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-10 ${isOutlineExpanded ? 'h-1/2' : 'h-[52px]'
+        className={`absolute bottom-0 left-0 right-0 bg-surface border-t border-border flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_-10px_40px_rgba(0,0,0,0.03)] z-10 ${isOutlineExpanded ? 'h-1/2' : 'h-[52px]'
           }`}
       >
         <button
@@ -148,8 +148,8 @@ export default function BlockPalette() {
                   key={block.id}
                   onClick={() => handleOutlineClick(block.id)}
                   className={`px-3 py-2 text-[13px] truncate rounded-lg cursor-pointer transition-all active:scale-[0.98] ${isActive
-                    ? 'bg-surface shadow-sm ring-1 ring-border text-ink font-semibold'
-                    : 'text-muted hover:bg-surface-sunken hover:text-ink'
+                    ? 'bg-surface-sunken shadow-sm border border-rule/50 text-ink font-semibold'
+                    : 'text-muted hover:bg-surface-sunken hover:text-ink border border-transparent'
                     }`}
                 >
                   {getOutlineLabel(block)}

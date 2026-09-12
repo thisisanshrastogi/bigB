@@ -51,11 +51,19 @@ export default function NewsletterBlock({ data, editing }) {
       button: "bg-accent text-surface hover:bg-accent/90",
       icon: "bg-accent text-surface"
     },
+    sunken: {
+      container: "bg-surface-sunken border border-rule/50",
+      heading: "text-ink",
+      body: "text-ink/80",
+      input: "bg-surface border-rule text-ink placeholder:text-muted focus:border-forest/50 focus:ring-forest/10",
+      button: "bg-forest text-surface hover:bg-forest/90 shadow-sm",
+      icon: "bg-forest text-surface"
+    },
     ink: {
       container: "bg-ink border border-white/10",
       heading: "text-paper",
       body: "text-paper/70",
-      input: "bg-white/5 border-white/10 text-paper placeholder:text-white/40 focus:ring-paper",
+      input: "bg-white/5 border-white/10 text-paper placeholder:text-white/40 focus:border-white/30 focus:ring-white/10",
       button: "bg-paper text-ink hover:bg-white",
       icon: "bg-paper text-ink"
     },
@@ -63,17 +71,17 @@ export default function NewsletterBlock({ data, editing }) {
       container: "bg-paper border border-border",
       heading: "text-ink",
       body: "text-muted",
-      input: "bg-surface border-border text-ink placeholder:text-muted focus:ring-accent",
+      input: "bg-surface border-rule text-ink placeholder:text-muted focus:border-forest/50 focus:ring-forest/10",
       button: "bg-ink text-surface hover:bg-ink/90",
       icon: "bg-ink text-surface"
     },
     forest: {
-      container: "bg-accent",
+      container: "bg-forest",
       heading: "text-surface",
       body: "text-surface/70",
-      input: "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:ring-highlight",
-      button: "bg-surface text-accent hover:bg-surface-sunken",
-      icon: "bg-surface text-accent"
+      input: "bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:border-white/30 focus:ring-white/10",
+      button: "bg-surface text-forest hover:bg-surface-sunken shadow-sm",
+      icon: "bg-surface text-forest"
     }
   };
 

@@ -219,16 +219,6 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
               </button>
             )}
             
-            {/* Remove */}
-            {!block.locked && (
-              <button 
-                onClick={(e) => { e.stopPropagation(); onRemove(); }}
-                className="px-3 h-full hover:bg-red-500/20 hover:text-red-400 transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-[0.98]"
-                title="Remove block"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
-              </button>
-            )}
 
             {/* Convert */}
             <div className="relative flex items-center h-full">
@@ -272,7 +262,7 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
             <div className="relative flex items-center h-full">
               <button 
                 onClick={(e) => { e.stopPropagation(); setIsImproveMenuOpen(!isImproveMenuOpen); setIsConvertMenuOpen(false); }}
-                className={`px-3 h-full hover:bg-white/10 transition-colors flex items-center justify-center active:scale-[0.98] rounded-r-full ${isImproving ? 'text-accent' : 'text-[#D6CFBF] hover:text-white'}`}
+                className={`px-3 h-full hover:bg-white/10 transition-colors flex items-center justify-center active:scale-[0.98] ${block.locked ? 'rounded-r-full' : ''} ${isImproving ? 'text-accent' : 'text-[#D6CFBF] hover:text-white'}`}
                 title="Improve with AI"
                 disabled={isConverting || isImproving}
               >
@@ -319,6 +309,17 @@ export default function BlockFrame({ id, block, isSelected, onClick, onRemove, o
                 </>
               )}
             </div>
+
+            {/* Remove */}
+            {!block.locked && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); onRemove(); }}
+                className="px-3 h-full hover:bg-red-500/20 hover:text-red-400 transition-colors flex items-center justify-center text-[#D6CFBF] active:scale-[0.98] rounded-r-full"
+                title="Remove block"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            )}
           </div>
         </div>
       )}

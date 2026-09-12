@@ -25,7 +25,7 @@ export function CustomSelect({ value, onChange, options, placeholder = 'Select a
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white flex items-center justify-between shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-border-strong transition-colors outline-none focus:border-accent"
+        className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white flex items-center justify-between transition-all outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 hover:border-border-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
       >
         <span className="truncate">{displayLabel}</span>
         <svg className={`w-4 h-4 text-muted transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -91,7 +91,7 @@ export function ImageFieldRenderer({ field, value, onChange, aspectClass = "aspe
           placeholder="Or paste an image URL..."
           value={imageUrl} 
           onChange={(e) => onChange(e.target.value)}
-          className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+          className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white transition-all outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 hover:border-border-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
         />
       </div>
       {help && <p className="text-xs text-muted mt-2">{help}</p>}
@@ -120,7 +120,7 @@ export default function FieldRenderer({ field, value, onChange }) {
             type="text" 
             value={val} 
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white transition-all outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 hover:border-border-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
@@ -133,7 +133,7 @@ export default function FieldRenderer({ field, value, onChange }) {
           <textarea 
             value={val} 
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors resize-y min-h-[100px] shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white transition-all outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 hover:border-border-strong resize-y min-h-[100px] shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>
@@ -214,7 +214,7 @@ export default function FieldRenderer({ field, value, onChange }) {
       return (
         <div className="mb-6">
           <label className="block text-xs font-semibold text-ink uppercase tracking-wider mb-2">{label || key}</label>
-          <div className="border border-border rounded-lg bg-white shadow-[0_1px_2px_rgba(0,0,0,0.02)] px-3 py-2">
+          <div className="rounded-lg bg-white px-3 py-2 transition-all focus-within:border-forest/50 focus-within:ring-4 focus-within:ring-forest/10 border border-border hover:border-border-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
             <RichTextEditor 
               value={val} 
               onChange={onChange} 
@@ -301,7 +301,7 @@ export default function FieldRenderer({ field, value, onChange }) {
             type="number" 
             value={val === '' ? '' : Number(val)} 
             onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
-            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border focus:border-accent outline-none bg-white transition-colors shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+            className="w-full px-3 py-2 text-[14px] rounded-lg border border-border bg-white transition-all outline-none focus:border-forest/50 focus:ring-4 focus:ring-forest/10 hover:border-border-strong shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
           />
           {help && <p className="text-xs text-muted mt-2">{help}</p>}
         </div>

@@ -31,11 +31,16 @@ export default function CtaBlock({ data, editing }) {
     headingClass += 'text-accent';
     bodyClass += 'text-accent/80';
     buttonClass += 'bg-accent text-white hover:bg-accent/90';
+  } else if (theme === 'sunken') {
+    containerClass = 'bg-surface-sunken border border-rule/50 rounded-[24px] px-[32px] py-[36px]';
+    headingClass += 'text-ink';
+    bodyClass += 'text-ink/80';
+    buttonClass += 'bg-forest text-white hover:bg-forest/90 shadow-sm';
   } else if (theme === 'forest') {
-    containerClass = 'bg-accent rounded-[24px] px-[32px] py-[36px]';
+    containerClass = 'bg-forest rounded-[24px] px-[32px] py-[36px]';
     headingClass += 'text-surface';
     bodyClass += 'text-surface/80';
-    buttonClass += 'bg-surface text-accent hover:bg-surface-sunken';
+    buttonClass += 'bg-surface text-forest hover:bg-surface-sunken';
   } else if (theme === 'outline') {
     containerClass = 'bg-transparent border border-border-strong rounded-[24px] px-[32px] py-[36px]';
     headingClass += 'text-ink';

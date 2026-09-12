@@ -185,7 +185,7 @@ export default function EditorLayout() {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-paper">
+    <div className="flex flex-col h-screen overflow-hidden bg-surface">
       <StudioTopBar />
       
       {viewMode === 'preview' ? (
@@ -212,13 +212,13 @@ export default function EditorLayout() {
           onDragEnd={handleDragEnd}
         >
           <div className="flex-1 flex overflow-hidden w-full">
-            <div className="w-[240px] shrink-0 border-r border-border bg-paper flex flex-col">
+            <div className="w-[240px] shrink-0 border-r border-border bg-surface flex flex-col">
               <BlockPalette />
             </div>
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative bg-surface shadow-[0_0_20px_rgba(0,0,0,0.03)_inset] ring-1 ring-black/[0.02]">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative bg-paper">
               <BlockCanvas localBlocks={blocks} />
             </div>
-            <div className="w-[300px] xl:w-[340px] shrink-0 bg-paper border-l border-border flex flex-col overflow-hidden">
+            <div className="w-[300px] xl:w-[340px] shrink-0 bg-surface border-l border-border flex flex-col overflow-hidden">
               <InspectorRail />
             </div>
           </div>

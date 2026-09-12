@@ -23,7 +23,7 @@ export default function CalloutBlock({ data, editing }) {
     return (
       <div className="border-y border-border py-8 my-8 flex flex-col md:flex-row gap-6 items-start">
         {variant?.startsWith('stat') && figure && (
-          <div className="font-serif text-[40px] md:text-[44px] text-accent leading-none shrink-0 w-[120px]">
+          <div className="font-serif text-[40px] md:text-[44px] text-forest leading-none shrink-0 w-[120px]">
             {figure}
           </div>
         )}
@@ -36,23 +36,30 @@ export default function CalloutBlock({ data, editing }) {
   }
 
   // Presentation: Boxed
-  let bgClass = 'bg-highlight';
-  let textClass = 'text-accent';
-  let bodyTextClass = 'text-accent/80';
+  let bgClass = 'bg-surface-sunken border border-rule/50';
+  let textClass = 'text-ink';
+  let bodyTextClass = 'text-ink/80';
   let DefaultIcon = Info;
 
-  if (variant === 'warn') {
-    bgClass = 'bg-warn-bg';
+  if (variant === 'mint') {
+    bgClass = 'bg-highlight';
+    textClass = 'text-accent';
+    bodyTextClass = 'text-accent/80';
+  } else if (variant === 'warn') {
+    bgClass = 'bg-warn-bg border border-warn-ink/20';
     textClass = 'text-warn-ink';
     bodyTextClass = 'text-warn-ink/80';
     DefaultIcon = AlertTriangle;
   } else if (variant === 'success') {
-    bgClass = 'bg-highlight';
+    bgClass = 'bg-forest text-surface';
+    textClass = 'text-surface';
+    bodyTextClass = 'text-surface/80';
     DefaultIcon = CheckCircle;
   } else if (variant === 'stat') {
     DefaultIcon = BarChart2;
+    textClass = 'text-forest';
   } else if (variant === 'stat-forest') {
-    bgClass = 'bg-accent';
+    bgClass = 'bg-forest';
     textClass = 'text-surface';
     bodyTextClass = 'text-surface/80';
     DefaultIcon = BarChart2;
